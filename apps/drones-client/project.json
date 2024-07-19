@@ -20,12 +20,12 @@
         "styles": [
           "apps/drones-client/src/styles/styles.scss",
           {
-            "input": "apps/drones-client/src/styles/themes/drones-light/theme.scss",
+            "input": "apps/drones-client/src/styles/themes/drones/light/theme.scss",
             "bundleName": "drones-light",
             "inject": false
           },
           {
-            "input": "apps/drones-client/src/styles/themes/drones-dark/theme.scss",
+            "input": "apps/drones-client/src/styles/themes/drones/dark/theme.scss",
             "bundleName": "drones-dark",
             "inject": false
           }

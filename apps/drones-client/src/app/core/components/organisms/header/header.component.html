@@ -1,0 +1,13 @@
+<section class="left-action-panel">
+  <div class="app-logo">
+    <span>{{ appTitle }}</span>
+  </div>
+  <div class="app-metadata">
+    <span>app version - </span>
+    <span>{{ $appVersion() }}</span>
+  </div>
+</section>
+
+<section class="right-action-panel">
+  <p-inputSwitch [(ngModel)]="$isLightMode"></p-inputSwitch>
+</section>
