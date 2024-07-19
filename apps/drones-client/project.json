@@ -16,15 +16,18 @@
         "polyfills": ["zone.js"],
         "tsConfig": "apps/drones-client/tsconfig.app.json",
         "inlineStyleLanguage": "scss",
-        "assets": [
-          "apps/drones-client/src/favicon.ico",
-          "apps/drones-client/src/assets"
-        ],
+        "assets": ["apps/drones-client/src/favicon.ico", "apps/drones-client/src/assets"],
         "styles": [
           "apps/drones-client/src/styles/styles.scss",
           {
             "input": "apps/drones-client/src/styles/themes/drones-light/theme.scss",
-            "bundleName": "drones-light"
+            "bundleName": "drones-light",
+            "inject": false
+          },
+          {
+            "input": "apps/drones-client/src/styles/themes/drones-dark/theme.scss",
+            "bundleName": "drones-dark",
+            "inject": false
           }
         ],
         "scripts": []
