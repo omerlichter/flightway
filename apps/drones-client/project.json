@@ -4,7 +4,7 @@
   "projectType": "application",
   "prefix": "app",
   "sourceRoot": "apps/drones-client/src",
-  "tags": [],
+  "tags": ["client"],
   "targets": {
     "build": {
       "executor": "@angular-devkit/build-angular:browser",
@@ -20,7 +20,13 @@
           "apps/drones-client/src/favicon.ico",
           "apps/drones-client/src/assets"
         ],
-        "styles": ["apps/drones-client/src/styles.scss"],
+        "styles": [
+          "apps/drones-client/src/styles/styles.scss",
+          {
+            "input": "apps/drones-client/src/styles/themes/drones-light/theme.scss",
+            "bundleName": "drones-light"
+          }
+        ],
         "scripts": []
       },
       "configurations": {
@@ -60,7 +66,10 @@
           "buildTarget": "drones-client:build:development"
         }
       },
-      "defaultConfiguration": "development"
+      "defaultConfiguration": "development",
+      "options": {
+        "proxyConfig": "apps/drones-client/proxy.conf.json"
+      }
     },
     "extract-i18n": {
       "executor": "@angular-devkit/build-angular:extract-i18n",

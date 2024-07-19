@@ -13,8 +13,16 @@
             "allow": [],
             "depConstraints": [
               {
-                "sourceTag": "*",
-                "onlyDependOnLibsWithTags": ["*"]
+                "sourceTag": "client",
+                "onlyDependOnLibsWithTags": ["client", "shared"]
+              },
+              {
+                "sourceTag": "api",
+                "onlyDependOnLibsWithTags": ["api", "shared"]
+              },
+              {
+                "sourceTag": "shared",
+                "onlyDependOnLibsWithTags": ["shared"]
               }
             ]
           }
