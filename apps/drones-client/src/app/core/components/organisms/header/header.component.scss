@@ -7,12 +7,16 @@
   justify-content: space-between;
 
   background-color: var(--surface-50);
-  padding: var(--spacing-medium-200);
+  padding: var(--spacing-medium-100);
 
   .left-action-panel {
     display: flex;
     flex-direction: row;
     align-items: center;
     gap: var(--spacing-medium-200);
+
+    .app-metadata {
+      font-size: var(--fs-small-200);
+    }
   }
 }

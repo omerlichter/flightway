@@ -1,7 +1,6 @@
 /* Customizations to the designer theme should be defined here */
 @mixin focused-ring($ring-color) {
-  box-shadow: 0 0 0 2px #1c2127, 0 0 0 4px $ring-color,
-    0 1px 2px 0 rgba(0, 0, 0, 0);
+  box-shadow: 0 0 0 2px #1c2127, 0 0 0 4px $ring-color, 0 1px 2px 0 rgba(0, 0, 0, 0);
 }
 
 @layer primeng {
@@ -11,15 +10,14 @@
 
   .p-selectbutton > .p-button,
   .p-togglebutton.p-button {
-    transition: background-color $transitionDuration,
-      border-color $transitionDuration, box-shadow $transitionDuration;
+    transition: background-color $transitionDuration, border-color $transitionDuration, box-shadow $transitionDuration;
   }
 
   .p-accordion {
     .p-accordion-header {
       .p-accordion-header-link {
-        transition: background-color $transitionDuration,
-          border-color $transitionDuration, box-shadow $transitionDuration;
+        transition: background-color $transitionDuration, border-color $transitionDuration,
+          box-shadow $transitionDuration;
       }
     }
   }
@@ -28,8 +26,8 @@
     .p-tabview-nav {
       li {
         .p-tabview-nav-link {
-          transition: background-color $transitionDuration,
-            border-color $transitionDuration, box-shadow $transitionDuration;
+          transition: background-color $transitionDuration, border-color $transitionDuration,
+            box-shadow $transitionDuration;
         }
       }
     }
@@ -39,8 +37,8 @@
     .p-tabmenu-nav {
       .p-tabmenuitem {
         .p-menuitem-link {
-          transition: background-color $transitionDuration,
-            border-color $transitionDuration, box-shadow $transitionDuration;
+          transition: background-color $transitionDuration, border-color $transitionDuration,
+            box-shadow $transitionDuration;
         }
       }
     }
@@ -150,8 +148,7 @@
 
   .p-picklist-buttons .p-button,
   .p-orderlist-controls .p-button {
-    transition: opacity $transitionDuration,
-      background-color $transitionDuration, color $transitionDuration,
+    transition: opacity $transitionDuration, background-color $transitionDuration, color $transitionDuration,
       border-color $transitionDuration, box-shadow $transitionDuration;
   }
 
@@ -164,5 +161,11 @@
         }
       }
     }
+  }
+
+  .p-splitter {
+    border-radius: 0;
+    border: unset;
+    background: unset;
   }
 }

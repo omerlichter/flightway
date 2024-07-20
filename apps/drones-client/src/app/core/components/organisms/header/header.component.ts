@@ -2,8 +2,8 @@ import { ChangeDetectionStrategy, Component, computed, effect, inject, model } f
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { InputSwitchModule } from 'primeng/inputswitch';
-import { ThemeService } from '../../../../shared/services/theme.service';
-import { Theme } from '../../../../shared/types/theme.type';
+import { ThemeService } from '../../../services/theme.service';
+import { Theme } from '../../../types/theme.type';
 import { AppService } from '../../../services/app.service';
 
 @Component({
@@ -20,6 +20,7 @@ export class HeaderComponent {
 
   protected readonly $isLightMode = model<boolean>(false);
   protected readonly $appVersion = this._appService.appVersion;
+  protected readonly $appPlatform = this._appService.appPlatform;
 
   private readonly $themeMode = computed<Theme>(() => {
     return this.$isLightMode() ? 'drones-light' : 'drones-dark';

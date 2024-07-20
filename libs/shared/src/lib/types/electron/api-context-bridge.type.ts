@@ -1,4 +1,4 @@
 export interface ApiContextBridge {
   getAppVersion: () => Promise<string>;
-  platform: string;
+  getAppPlatform: () => Promise<string>;
 }

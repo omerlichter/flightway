@@ -3,7 +3,10 @@
     <span>{{ appTitle }}</span>
   </div>
   <div class="app-metadata">
-    <span>app version - </span>
+    <span>app version</span>
+    <span> - </span>
+    <span>{{ $appPlatform() }}</span>
+    <span> : </span>
     <span>{{ $appVersion() }}</span>
   </div>
 </section>

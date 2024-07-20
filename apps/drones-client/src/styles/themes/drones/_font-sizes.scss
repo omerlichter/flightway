@@ -1,0 +1,35 @@
+$font-sizes: (
+  'small': (
+    'default': 0.6rem,
+    '100': 0.6rem,
+    '200': 0.8rem,
+    '300': 1rem,
+    '400': 1.1rem,
+  ),
+  'medium': (
+    'default': 1.2rem,
+    '100': 1.2rem,
+    '200': 1.4rem,
+    '300': 1.6rem,
+    '400': 1.8rem,
+  ),
+  'large': (
+    'default': 2rem,
+    '100': 2rem,
+    '200': 2.5rem,
+    '300': 3rem,
+    '400': 4rem,
+  ),
+);
+
+:root {
+  @each $key, $subGroup in $font-sizes {
+    @each $subKey, $value in $subGroup {
+      @if $subKey == 'default' {
+        --fs-#{$key}: #{$value};
+      } @else {
+        --fs-#{$key}-#{$subKey}: #{$value};
+      }
+    }
+  }
+}
