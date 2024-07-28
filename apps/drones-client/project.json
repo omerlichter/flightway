@@ -16,9 +16,18 @@
         "polyfills": ["zone.js"],
         "tsConfig": "apps/drones-client/tsconfig.app.json",
         "inlineStyleLanguage": "scss",
-        "assets": ["apps/drones-client/src/favicon.ico", "apps/drones-client/src/assets"],
+        "assets": [
+          "apps/drones-client/src/favicon.ico",
+          "apps/drones-client/src/assets",
+          {
+            "glob": "**/*",
+            "input": "./node_modules/leaflet/dist/images/",
+            "output": "./"
+          }
+        ],
         "styles": [
           "apps/drones-client/src/styles/styles.scss",
+          "node_modules/leaflet/dist/leaflet.css",
           {
             "input": "apps/drones-client/src/styles/themes/drones/light/theme.scss",
             "bundleName": "drones-light",
