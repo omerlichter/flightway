@@ -1,12 +1,10 @@
 :host {
-  display: block;
   height: 100%;
+  display: grid;
+  grid-template-columns: 1fr auto;
 
   .splitter {
     height: 100%;
     display: grid;
-  }
-
-  .tool-bar {
   }
 }

@@ -43,11 +43,9 @@ $textColor: $shade700 !default;
 $textSecondaryColor: $shade600 !default;
 $borderRadius: 6px !default;
 $transitionDuration: 0.2s !default;
-$formElementTransition: background-color $transitionDuration,
-  color $transitionDuration, border-color $transitionDuration,
-  box-shadow $transitionDuration !default;
-$actionIconTransition: background-color $transitionDuration,
-  color $transitionDuration, box-shadow $transitionDuration !default;
+$formElementTransition: background-color $transitionDuration, color $transitionDuration,
+  border-color $transitionDuration, box-shadow $transitionDuration !default;
+$actionIconTransition: background-color $transitionDuration, color $transitionDuration, box-shadow $transitionDuration !default;
 $listItemTransition: box-shadow $transitionDuration !default;
 $primeIconFontSize: 1rem !default;
 $divider: 1px solid $shade300 !default;
@@ -147,8 +145,7 @@ $buttonHoverBorderColor: $primaryDarkColor !default;
 $buttonActiveBg: $primaryDarkerColor !default;
 $buttonTextActiveColor: $primaryTextColor !default;
 $buttonActiveBorderColor: $primaryDarkerColor !default;
-$raisedButtonShadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
-  0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12) !default;
+$raisedButtonShadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12) !default;
 $roundedButtonBorderRadius: 2rem !default;
 
 $textButtonHoverBgOpacity: 0.04 !default;
@@ -462,8 +459,7 @@ $cardSubTitleFontWeight: 400 !default;
 $cardSubTitleColor: $shade600 !default;
 $cardContentPadding: 1.25rem 0 !default;
 $cardFooterPadding: 1.25rem 0 0 0 !default;
-$cardShadow: 0 2px 1px -1px rgba(0, 0, 0, 0.2), 0 1px 1px 0 rgba(0, 0, 0, 0.14),
-  0 1px 3px 0 rgba(0, 0, 0, 0.12) !default;
+$cardShadow: 0 2px 1px -1px rgba(0, 0, 0, 0.2), 0 1px 1px 0 rgba(0, 0, 0, 0.14), 0 1px 3px 0 rgba(0, 0, 0, 0.12) !default;
 
 //editor
 $editorToolbarBg: $panelHeaderBg !default;
@@ -880,26 +876,26 @@ $imagePreviewActionIconBorderRadius: 50% !default;
   --primary-color: #{$primaryColor};
   --primary-color-text: #{$primaryTextColor};
   --surface-0: #ffffff;
-  --surface-50: #f9fafb;
-  --surface-100: #f3f4f6;
-  --surface-200: #e5e7eb;
-  --surface-300: #d1d5db;
-  --surface-400: #9ca3af;
-  --surface-500: #6b7280;
-  --surface-600: #4b5563;
-  --surface-700: #374151;
-  --surface-800: #1f2937;
-  --surface-900: #111827;
-  --gray-50: #f9fafb;
-  --gray-100: #f3f4f6;
-  --gray-200: #e5e7eb;
-  --gray-300: #d1d5db;
-  --gray-400: #9ca3af;
-  --gray-500: #6b7280;
-  --gray-600: #4b5563;
-  --gray-700: #374151;
-  --gray-800: #1f2937;
-  --gray-900: #111827;
+  --surface-50: hsl(210, 20%, 94%);
+  --surface-100: hsl(220, 14%, 90%);
+  --surface-200: hsl(220, 13%, 83%);
+  --surface-300: hsl(216, 12%, 62%);
+  --surface-400: hsl(218, 11%, 48%);
+  --surface-500: hsl(220, 9%, 37%);
+  --surface-600: hsl(215, 14%, 25%);
+  --surface-700: hsl(217, 19%, 18%);
+  --surface-800: hsl(215, 28%, 10%);
+  --surface-900: hsl(221, 39%, 5%);
+  --gray-50: hsl(210, 20%, 94%);
+  --gray-100: hsl(220, 14%, 90%);
+  --gray-200: hsl(220, 13%, 83%);
+  --gray-300: hsl(216, 12%, 62%);
+  --gray-400: hsl(218, 11%, 48%);
+  --gray-500: hsl(220, 9%, 37%);
+  --gray-600: hsl(215, 14%, 25%);
+  --gray-700: hsl(217, 19%, 18%);
+  --gray-800: hsl(215, 28%, 10%);
+  --gray-900: hsl(221, 39%, 5%);
   --content-padding: #{$panelContentPadding};
   --inline-spacing: #{$inlineSpacing};
   --border-radius: #{$borderRadius};

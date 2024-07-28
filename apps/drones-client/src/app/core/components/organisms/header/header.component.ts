@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, effect, inject, model } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { InputSwitchModule } from 'primeng/inputswitch';
+import { ToggleButtonModule } from 'primeng/togglebutton';
 import { ThemeService } from '../../../services/theme.service';
 import { Theme } from '../../../types/theme.type';
 import { AppService } from '../../../services/app.service';
@@ -9,7 +9,7 @@ import { AppService } from '../../../services/app.service';
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [CommonModule, FormsModule, InputSwitchModule],
+  imports: [CommonModule, FormsModule, ToggleButtonModule],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

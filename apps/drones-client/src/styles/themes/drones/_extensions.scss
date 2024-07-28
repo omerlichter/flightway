@@ -57,6 +57,8 @@
   }
 
   .p-button {
+    cursor: pointer;
+
     &:focus {
       @include focused-ring(rgba($buttonBg, 0.7));
     }
@@ -160,6 +162,20 @@
           color: $primaryTextColor;
         }
       }
+    }
+  }
+
+  .p-divider {
+    &.p-divider-horizontal {
+      margin: 0.8rem 0;
+    }
+  }
+
+  .p-tooltip {
+    position: absolute;
+    .p-tooltip-text {
+      font-size: var(--fs-small-200);
+      padding: var(--spacing-small-400);
     }
   }
 
