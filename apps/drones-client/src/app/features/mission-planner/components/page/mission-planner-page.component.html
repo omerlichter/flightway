@@ -1,26 +1,5 @@
 <app-mission-planner-page-layout>
-  <div ng-content-main-section>
-    <app-planner-map></app-planner-map>
-  </div>
-  <div ng-content-bottom-section>BOTTOM SECTION</div>
-  <div ng-content-toolbar>
-    <p-button
-      pTooltip="Download Mission"
-      showDelay="500"
-      tooltipPosition="left"
-      icon="pi pi-download"
-      [outlined]="true"
-    ></p-button>
-    <p-button
-      pTooltip="Upload Mission"
-      showDelay="500"
-      tooltipPosition="left"
-      icon="pi pi-upload"
-      [outlined]="true"
-    ></p-button>
-    <p-divider />
-    <p-button icon="pi pi-bullseye" [outlined]="true"></p-button>
-    <p-button icon="pi pi-map-marker" [outlined]="true"></p-button>
-    <p-button icon="pi pi-map" [outlined]="true"></p-button>
-  </div>
+  <app-planner-map ng-content-main-section></app-planner-map>
+  <app-planner-data-table ng-content-bottom-section></app-planner-data-table>
+  <app-planner-toolbar ng-content-toolbar (drawMarker)="onDrawMarker()"></app-planner-toolbar>
 </app-mission-planner-page-layout>

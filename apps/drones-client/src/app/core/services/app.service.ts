@@ -15,13 +15,11 @@ export function AppServiceFactory(): AppService {
   return new AppWebService();
 }
 
-@Injectable()
 export class AppElectronService extends AppService {
-  public readonly appVersion = toSignal(from(window.electron.getAppVersion()), { initialValue: '0.0.0' });
-  public readonly appPlatform = toSignal(from(window.electron.getAppPlatform()), { initialValue: '' });
+  public readonly appVersion = toSignal(from(window.electron.app.getAppVersion()), { initialValue: '0.0.0' });
+  public readonly appPlatform = toSignal(from(window.electron.app.getAppPlatform()), { initialValue: '' });
 }
 
-@Injectable()
 export class AppWebService extends AppService {
   public readonly appVersion = signal('0.0.0');
   public readonly appPlatform = signal('web');

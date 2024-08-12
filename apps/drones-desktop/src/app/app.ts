@@ -73,6 +73,7 @@ export default class App {
         preload: join(__dirname, 'main.preload.js'),
       },
     });
+    App.mainWindow.webContents.openDevTools();
     App.mainWindow.setMenu(null);
     App.mainWindow.center();
 
