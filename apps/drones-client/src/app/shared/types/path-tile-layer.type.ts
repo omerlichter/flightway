@@ -1,11 +1,11 @@
-import { Coords, DoneCallback, GridLayer, TileLayerOptions } from 'leaflet';
+import { Coords, DoneCallback, GridLayer, GridLayerOptions } from 'leaflet';
 import { MapTileService } from '../../core/services/map-tile.service';
 
 export class PathTileLayer extends GridLayer {
   private _tilePath: string;
   private _mapTileService: MapTileService;
 
-  constructor(tilePath: string, mapTileService: MapTileService, options: TileLayerOptions) {
+  constructor(tilePath: string, mapTileService: MapTileService, options: GridLayerOptions) {
     super(options);
     this._tilePath = tilePath;
     this._mapTileService = mapTileService;

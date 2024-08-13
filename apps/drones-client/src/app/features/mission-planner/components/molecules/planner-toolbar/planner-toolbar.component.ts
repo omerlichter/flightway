@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { DividerModule } from 'primeng/divider';
@@ -13,9 +13,9 @@ import { TooltipModule } from 'primeng/tooltip';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PlannerToolbarComponent {
-  @Output() public drawMarker = new EventEmitter<void>();
+  public readonly drawMarker = output<void>();
 
-  protected onDrawMarker() {
+  protected onDrawMarker(): void {
     this.drawMarker.emit();
   }
 }

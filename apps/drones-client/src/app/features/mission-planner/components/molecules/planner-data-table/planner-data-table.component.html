@@ -1,23 +1,28 @@
 <p-table
-  styleClass="p-datatable-striped p-datatable-gridlines p-datatable-sm"
-  [value]="points"
+  class="data-table"
+  styleClass="p-datatable-striped p-datatable-gridlines p-datatable-sm planner-data-table"
+  [value]="$pathPoints()"
   [columns]="columns"
-  [scrollable]="true"
   [resizableColumns]="true"
   [reorderableColumns]="true"
+  (onRowReorder)="onRowReorder($event)"
 >
   <ng-template pTemplate="header" let-columns>
     <tr>
-      <th style="width: 50px"></th>
-      <th *ngFor="let col of columns" pReorderableColumn>
+      <th style="width: 40px"></th>
+      <th style="width: 40px">#</th>
+      <th *ngFor="let col of columns" pResizableColumn>
         {{ col.header }}
       </th>
+      <th style="width: 40px"></th>
     </tr>
   </ng-template>
   <ng-template pTemplate="body" let-rowData let-columns="columns" let-index="rowIndex">
-    <tr [pReorderableRow]="index">
+    <tr [pEditableRow]="rowData" [pReorderableRow]="index">
       <td>
         <span class="pi pi-bars" pReorderableRowHandle></span>
+      </td>
+      <td>
         <span>{{ index }}</span>
       </td>
       <td *ngFor="let col of columns">

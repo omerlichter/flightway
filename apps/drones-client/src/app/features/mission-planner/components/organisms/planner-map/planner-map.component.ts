@@ -1,6 +1,27 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, EventEmitter, inject, Output } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  effect,
+  EventEmitter,
+  inject,
+  input,
+  output,
+  Output,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Draw, DrawMap, featureGroup, FeatureGroup, Layer, LayerGroup, map } from 'leaflet';
+import {
+  Draw,
+  DrawEvents,
+  DrawMap,
+  featureGroup,
+  FeatureGroup,
+  LeafletEvent,
+  map,
+  marker,
+  Marker,
+  polyline,
+} from 'leaflet';
 import 'leaflet-draw';
 import { MapTileService } from '../../../../../core/services/map-tile.service';
 import { PathTileLayer } from '../../../../../shared/types/path-tile-layer.type';
@@ -16,32 +37,59 @@ import { MapPoint } from '@drones-app/shared';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PlannerMapComponent implements EditableMap, AfterViewInit {
-  private _mapTileService = inject(MapTileService);
+  private readonly _mapTileService = inject(MapTileService);
 
-  @Output() public marked = new EventEmitter<MapPoint>();
+  public readonly $pathPoints = input.required<Array<MapPoint>>({ alias: 'pathPoints' });
+
+  public readonly markerAdded = output<MapPoint>();
 
   private _map!: DrawMap;
-  private _drawLayer!: FeatureGroup;
+  private _markersLayer!: FeatureGroup;
+  private _pathLayer!: FeatureGroup;
+
+  constructor() {
+    effect(() => {
+      this._markersLayer.clearLayers();
+      this._pathLayer.clearLayers();
+      this.$pathPoints().forEach((point: MapPoint, index: number) => {
+        marker([point.x, point.y])
+          .bindPopup(() => `<b>${index}</b><br>lat: ${point.x}, lng: ${point.y}`)
+          .addTo(this._markersLayer);
+      });
+      polyline(
+        this.$pathPoints().map((point: MapPoint) => [point.x, point.y]),
+        { color: 'red', dashArray: [1, 10] }
+      ).addTo(this._pathLayer);
+    });
+  }
 
   public ngAfterViewInit(): void {
     this._map = map('map', { layers: [] });
     // load from file system'file://C:/Users/omer/drones_maps/osm'
-    this._map.addLayer(new PathTileLayer('https://tile.openstreetmap.org', this._mapTileService, {}));
+    this._map.addLayer(
+      new PathTileLayer('https://tile.openstreetmap.org', this._mapTileService, { maxZoom: 19, minZoom: 1 })
+    );
     this._map.setView([31.698341938933652, 35.08022474362937], 7);
 
-    this._drawLayer = featureGroup();
-    this._map.addLayer(this._drawLayer);
+    this._markersLayer = featureGroup();
+    this._pathLayer = featureGroup();
+    this._map.addLayer(this._markersLayer);
+    this._map.addLayer(this._pathLayer);
 
-    this._map.on(Draw.Event.CREATED, (e: any) => {
-      const type = e.layerType;
+    this._map.on(Draw.Event.CREATED, (e: LeafletEvent) => {
+      const createEvent: DrawEvents.Created = e as DrawEvents.Created;
+      const type = createEvent.layerType;
+      const layer = createEvent.layer;
       if (type === 'marker') {
-        // Do marker specific actions
+        const marker = layer as Marker;
+        const { lat, lng } = marker.getLatLng();
+        this.markerAdded.emit({ x: lat, y: lng });
       }
     });
   }
 
   public drawMarker(): void {
-    const markerDrawer = new Draw.Marker(this._map, {});
+    const markerDrawer = new Draw.Marker(this._map, { repeatMode: true });
     markerDrawer.enable();
   }
 }

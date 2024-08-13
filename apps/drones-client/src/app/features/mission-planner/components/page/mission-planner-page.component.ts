@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal, viewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { DividerModule } from 'primeng/divider';
@@ -8,6 +8,7 @@ import { PlannerMapComponent } from '../organisms/planner-map/planner-map.compon
 import { EditableMap } from '../../../../shared/types/editable-map.type';
 import { PlannerToolbarComponent } from '../molecules/planner-toolbar/planner-toolbar.component';
 import { PlannerDataTableComponent } from '../molecules/planner-data-table/planner-data-table.component';
+import { MapPoint } from '@drones-app/shared';
 
 @Component({
   selector: 'app-mission-planner-page',
@@ -26,7 +27,17 @@ import { PlannerDataTableComponent } from '../molecules/planner-data-table/plann
 export class MissionPlannerPageComponent {
   private _$editableMapComponent = viewChild.required<EditableMap>(PlannerMapComponent);
 
+  protected $pathPoints = signal<Array<MapPoint>>([]);
+
   protected onDrawMarker(): void {
     this._$editableMapComponent().drawMarker();
+  }
+
+  protected onMarkerAdded(point: MapPoint): void {
+    this.$pathPoints.update((value) => [...value, point]);
+  }
+
+  protected onTableChanged(pathPoints: Array<MapPoint>): void {
+    this.$pathPoints.set([...pathPoints]);
   }
 }

@@ -1,6 +1,6 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, output, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TableModule } from 'primeng/table';
+import { TableModule, TableRowReorderEvent } from 'primeng/table';
 import { MapPoint } from '@drones-app/shared';
 
 @Component({
@@ -12,12 +12,9 @@ import { MapPoint } from '@drones-app/shared';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PlannerDataTableComponent {
-  protected points: Array<MapPoint> = [
-    { x: 0, y: 1, z: 0.5 },
-    { x: 23, y: 56, z: 0.5 },
-    { x: 76, y: 8, z: 0 },
-    { x: 3, y: 11, z: 22 },
-  ];
+  public readonly $pathPoints = input.required<Array<MapPoint>>({ alias: 'pathPoints' });
+
+  public readonly pathPointsChanged = output<Array<MapPoint>>();
 
   protected columns: Array<{ header: string; field: keyof MapPoint }> = [
     {
@@ -33,4 +30,8 @@ export class PlannerDataTableComponent {
       header: 'Z',
     },
   ];
+
+  protected onRowReorder(a: TableRowReorderEvent) {
+    this.pathPointsChanged.emit(this.$pathPoints());
+  }
 }
