@@ -2,6 +2,7 @@ import {
   AfterViewInit,
   ChangeDetectionStrategy,
   Component,
+  computed,
   effect,
   EventEmitter,
   inject,
@@ -16,6 +17,7 @@ import {
   DrawMap,
   featureGroup,
   FeatureGroup,
+  LatLngExpression,
   LeafletEvent,
   map,
   marker,
@@ -26,7 +28,7 @@ import 'leaflet-draw';
 import { MapTileService } from '../../../../../core/services/map-tile.service';
 import { PathTileLayer } from '../../../../../shared/types/path-tile-layer.type';
 import { EditableMap } from '../../../../../shared/types/editable-map.type';
-import { MapPoint } from '@drones-app/shared';
+import { MapPoint, MissionPoint } from '@drones-app/shared';
 
 @Component({
   selector: 'app-planner-map',
@@ -39,7 +41,8 @@ import { MapPoint } from '@drones-app/shared';
 export class PlannerMapComponent implements EditableMap, AfterViewInit {
   private readonly _mapTileService = inject(MapTileService);
 
-  public readonly $pathPoints = input.required<Array<MapPoint>>({ alias: 'pathPoints' });
+  public readonly $missionPoints = input.required<Array<MissionPoint>>({ alias: 'missionPoints' });
+  public readonly $homePoint = input.required<MapPoint>({ alias: 'homePoint' });
 
   public readonly markerAdded = output<MapPoint>();
 
@@ -51,13 +54,25 @@ export class PlannerMapComponent implements EditableMap, AfterViewInit {
     effect(() => {
       this._markersLayer.clearLayers();
       this._pathLayer.clearLayers();
-      this.$pathPoints().forEach((point: MapPoint, index: number) => {
-        marker([point.x, point.y])
-          .bindPopup(() => `<b>${index}</b><br>lat: ${point.x}, lng: ${point.y}`)
+
+      const homePoint = this.$homePoint();
+      marker([homePoint.latitude, homePoint.longitude])
+        .bindPopup(() => `<b>H</b><br>latitude: ${homePoint.latitude}, longitude: ${homePoint.longitude}`)
+        .addTo(this._markersLayer);
+
+      this.$missionPoints().forEach((point: MissionPoint, index: number) => {
+        marker([point.latitude, point.longitude])
+          .bindPopup(() => `<b>${index}</b><br>latitude: ${point.latitude}, longitude: ${point.longitude}`)
           .addTo(this._markersLayer);
       });
       polyline(
-        this.$pathPoints().map((point: MapPoint) => [point.x, point.y]),
+        [
+          [homePoint.latitude, homePoint.longitude],
+          ...(this.$missionPoints().map((point: MissionPoint) => [
+            point.latitude,
+            point.longitude,
+          ]) as LatLngExpression[]),
+        ],
         { color: 'red', dashArray: [1, 10] }
       ).addTo(this._pathLayer);
     });
@@ -83,7 +98,7 @@ export class PlannerMapComponent implements EditableMap, AfterViewInit {
       if (type === 'marker') {
         const marker = layer as Marker;
         const { lat, lng } = marker.getLatLng();
-        this.markerAdded.emit({ x: lat, y: lng });
+        this.markerAdded.emit({ latitude: lat, longitude: lng, altitude: 100 });
       }
     });
   }

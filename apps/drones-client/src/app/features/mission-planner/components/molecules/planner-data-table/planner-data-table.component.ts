@@ -1,7 +1,7 @@
-import { ChangeDetectionStrategy, Component, input, output, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, model } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TableModule, TableRowReorderEvent } from 'primeng/table';
-import { MapPoint } from '@drones-app/shared';
+import { MapPoint, MissionPoint } from '@drones-app/shared';
 
 @Component({
   selector: 'app-planner-data-table',
@@ -12,26 +12,40 @@ import { MapPoint } from '@drones-app/shared';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PlannerDataTableComponent {
-  public readonly $pathPoints = input.required<Array<MapPoint>>({ alias: 'pathPoints' });
+  public readonly $missionPoints = model.required<Array<MissionPoint>>({ alias: 'missionPoints' });
 
-  public readonly pathPointsChanged = output<Array<MapPoint>>();
-
-  protected columns: Array<{ header: string; field: keyof MapPoint }> = [
+  protected columns: Array<{ header: string; field: keyof MissionPoint }> = [
     {
-      field: 'x',
-      header: 'X',
+      field: 'latitude',
+      header: 'Latitude',
     },
     {
-      field: 'y',
-      header: 'Y',
+      field: 'longitude',
+      header: 'Longitude',
     },
     {
-      field: 'z',
-      header: 'Z',
+      field: 'altitude',
+      header: 'Altitude',
+    },
+    {
+      field: 'gradient',
+      header: 'Gradient',
+    },
+    {
+      field: 'angle',
+      header: 'Angle',
+    },
+    {
+      field: 'distance',
+      header: 'Distance',
+    },
+    {
+      field: 'azimuth',
+      header: 'Azimuth',
     },
   ];
 
-  protected onRowReorder(a: TableRowReorderEvent) {
-    this.pathPointsChanged.emit(this.$pathPoints());
+  protected onRowReorder(row: TableRowReorderEvent) {
+    this.$missionPoints.update((value: Array<MissionPoint>) => [...value]);
   }
 }
