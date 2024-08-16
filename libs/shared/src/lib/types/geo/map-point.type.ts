@@ -1,5 +1,5 @@
 export interface MapPoint {
-  latitude: number;
-  longitude: number;
-  altitude: number;
+  readonly latitude: number;
+  readonly longitude: number;
+  readonly altitude: number;
 }

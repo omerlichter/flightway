@@ -24,11 +24,35 @@ import { calcBearing, calcGeoDistance, calcGradient, MapPoint, MissionPoint, rad
 export class MissionPlannerPageComponent implements OnInit {
   private _$editableMapComponent = viewChild.required<EditableMap>(PlannerMapComponent);
 
-  protected $missionPoints = signal<Array<MissionPoint>>([]);
+  protected $missionMapPoints = signal<Array<MapPoint>>([]);
   protected $homePoint = signal<MapPoint>({
     latitude: 32.0766323,
     longitude: 35.0839419,
     altitude: 350.7099914,
+  });
+  protected $missionPoints = computed<Array<MissionPoint>>(() => {
+    console.log('update');
+    let prevPoint = this.$homePoint();
+
+    return this.$missionMapPoints().map((point: MapPoint) => {
+      const height = point.altitude - prevPoint.altitude;
+      const distance = calcGeoDistance(point, prevPoint);
+      console.log(height, distance);
+      const gradient = calcGradient(height, distance);
+      const azimuth: number = (calcBearing(point, prevPoint) + 180) % 360;
+
+      prevPoint = point;
+
+      return {
+        latitude: point.latitude,
+        longitude: point.longitude,
+        altitude: point.altitude,
+        gradient: gradient * 100,
+        angle: rad2deg * Math.atan(gradient),
+        distance: Math.sqrt(distance * distance + height * height),
+        azimuth,
+      };
+    });
   });
 
   public ngOnInit(): void {
@@ -40,24 +64,11 @@ export class MissionPlannerPageComponent implements OnInit {
     this._$editableMapComponent().drawMarker();
   }
 
-  protected onMarkerAdded(point: MapPoint): void {
-    const prevPoint = this.$missionPoints()[this.$missionPoints().length - 1] ?? this.$homePoint();
+  protected onMarkerAdded(mapPoint: MapPoint): void {
+    this.$missionMapPoints.update((value: Array<MapPoint>) => [...value, mapPoint]);
+  }
 
-    const height = point.altitude - prevPoint.altitude;
-    const distance = calcGeoDistance(point, prevPoint);
-    console.log(height, distance);
-    const gradient = calcGradient(height, distance);
-    const azimuth: number = (calcBearing(point, prevPoint) + 180) % 360;
-
-    const missionPoint: MissionPoint = {
-      latitude: point.latitude,
-      longitude: point.longitude,
-      altitude: point.altitude,
-      gradient: gradient * 100,
-      angle: rad2deg * Math.atan(gradient),
-      distance: Math.sqrt(distance * distance + height * height),
-      azimuth,
-    };
-    this.$missionPoints.update((value: Array<MissionPoint>) => [...value, missionPoint]);
+  protected onUpdateDataTable(missionMapPoints: Array<MapPoint>) {
+    this.$missionMapPoints.set([...missionMapPoints]);
   }
 }

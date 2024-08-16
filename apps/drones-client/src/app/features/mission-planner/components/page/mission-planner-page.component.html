@@ -5,6 +5,10 @@
     [missionPoints]="$missionPoints()"
     (markerAdded)="onMarkerAdded($event)"
   ></app-planner-map>
-  <app-planner-data-table ng-content-bottom-section [(missionPoints)]="$missionPoints"></app-planner-data-table>
+  <app-planner-data-table
+    ng-content-bottom-section
+    [missionPoints]="$missionPoints()"
+    (updateTable)="onUpdateDataTable($event)"
+  ></app-planner-data-table>
   <app-planner-toolbar ng-content-toolbar (drawMarker)="onDrawMarker()"></app-planner-toolbar>
 </app-mission-planner-page-layout>

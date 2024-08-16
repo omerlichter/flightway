@@ -1,33 +1,100 @@
 <p-table
   class="data-table"
   styleClass="p-datatable-striped p-datatable-gridlines p-datatable-sm planner-data-table"
-  [value]="$missionPoints()"
+  [value]="$missionPointsDataTable()"
   [columns]="columns"
   [resizableColumns]="true"
+  columnResizeMode="expand"
   [reorderableColumns]="true"
-  (onRowReorder)="onRowReorder($event)"
+  [scrollable]="true"
+  scrollHeight="flex"
+  dataKey="id"
+  editMode="row"
+  (onRowReorder)="onUpdateTable()"
 >
   <ng-template pTemplate="header" let-columns>
     <tr>
-      <th style="width: 40px"></th>
-      <th style="width: 40px">#</th>
+      <th style="min-width: 40px; width: 40px" pFrozenColumn></th>
+      <th style="min-width: 120px; width: 120px" pFrozenColumn></th>
+      <th style="min-width: 40px; width: 40px" pFrozenColumn>
+        <div class="additional-data-container">#</div>
+      </th>
       <th *ngFor="let col of columns" pResizableColumn>
         {{ col.header }}
       </th>
-      <th style="width: 40px"></th>
     </tr>
   </ng-template>
-  <ng-template pTemplate="body" let-rowData let-columns="columns" let-index="rowIndex">
+  <ng-template
+    pTemplate="body"
+    let-rowData
+    let-columns="columns"
+    let-index="rowIndex"
+    let-editing="editing"
+    let-ri="rowIndex"
+  >
     <tr [pEditableRow]="rowData" [pReorderableRow]="index">
-      <td>
-        <span class="pi pi-bars" pReorderableRowHandle></span>
+      <td pFrozenColumn>
+        <div class="additional-data-container">
+          <span class="pi pi-bars" pReorderableRowHandle></span>
+        </div>
+      </td>
+      <td pFrozenColumn>
+        <div class="additional-data-container">
+          @if (!editing) {
+          <div>
+            <button pButton type="button" pInitEditableRow icon="pi pi-pencil" [text]="true"></button>
+            <button
+              pButton
+              type="button"
+              pInitEditableRow
+              icon="pi pi-trash"
+              [text]="true"
+              class="p-button-danger"
+            ></button>
+          </div>
+          } @else {
+          <div>
+            <button
+              pButton
+              type="button"
+              pSaveEditableRow
+              icon="pi pi-check"
+              [text]="true"
+              class="p-button-success"
+            ></button>
+            <button
+              pButton
+              type="button"
+              pCancelEditableRow
+              icon="pi pi-times"
+              [text]="true"
+              class="p-button-danger"
+            ></button>
+          </div>
+          }
+        </div>
       </td>
       <td>
-        <span>{{ index }}</span>
+        <div class="additional-data-container">
+          <span>{{ index }}</span>
+        </div>
       </td>
-      <td *ngFor="let col of columns">
+      @for (col of columns; track $index) {
+      <td>
+        @if (col.editable) {
+        <p-cellEditor>
+          <ng-template pTemplate="input">
+            <input class="p-inputtext-sm" pInputText type="text" [value]="rowData[col.field]" />
+          </ng-template>
+          <ng-template pTemplate="output">
+            {{ rowData[col.field] }}
+          </ng-template>
+        </p-cellEditor>
+        } @else {
         {{ rowData[col.field] }}
+        }
       </td>
+      }
     </tr>
   </ng-template>
 </p-table>

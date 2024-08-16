@@ -2,9 +2,11 @@
   height: 100%;
   display: grid;
   grid-template-columns: 1fr auto;
+  overflow: auto;
 
   .splitter {
     height: 100%;
     display: grid;
+    overflow: auto;
   }
 }

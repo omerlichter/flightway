@@ -1,1 +1,12 @@
+:host {
+  overflow: auto;
 
+  .data-table {
+    min-width: 100%;
+  }
+
+  .additional-data-container {
+    display: flex;
+    justify-content: center;
+  }
+}
