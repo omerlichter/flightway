@@ -4,8 +4,8 @@
   [value]="$missionPointsDataTable()"
   [columns]="columns"
   [resizableColumns]="true"
-  columnResizeMode="expand"
   [reorderableColumns]="true"
+  columnResizeMode="expand"
   [scrollable]="true"
   scrollHeight="flex"
   dataKey="id"
@@ -15,8 +15,8 @@
   <ng-template pTemplate="header" let-columns>
     <tr>
       <th style="min-width: 40px; width: 40px" pFrozenColumn></th>
-      <th style="min-width: 120px; width: 120px" pFrozenColumn></th>
-      <th style="min-width: 40px; width: 40px" pFrozenColumn>
+      <th style="width: 120px" pFrozenColumn></th>
+      <th style="min-width: 40px; width: 40px">
         <div class="additional-data-container">#</div>
       </th>
       <th *ngFor="let col of columns" pResizableColumn>
@@ -24,14 +24,8 @@
       </th>
     </tr>
   </ng-template>
-  <ng-template
-    pTemplate="body"
-    let-rowData
-    let-columns="columns"
-    let-index="rowIndex"
-    let-editing="editing"
-    let-ri="rowIndex"
-  >
+
+  <ng-template pTemplate="body" let-rowData let-columns="columns" let-index="rowIndex" let-editing="editing">
     <tr [pEditableRow]="rowData" [pReorderableRow]="index">
       <td pFrozenColumn>
         <div class="additional-data-container">
@@ -46,10 +40,10 @@
             <button
               pButton
               type="button"
-              pInitEditableRow
               icon="pi pi-trash"
               [text]="true"
               class="p-button-danger"
+              (click)="onDeleteMissionPoint(index)"
             ></button>
           </div>
           } @else {
@@ -60,6 +54,7 @@
               pSaveEditableRow
               icon="pi pi-check"
               [text]="true"
+              (click)="onEditMissionPoint(index, rowData)"
               class="p-button-success"
             ></button>
             <button
@@ -84,7 +79,12 @@
         @if (col.editable) {
         <p-cellEditor>
           <ng-template pTemplate="input">
-            <input class="p-inputtext-sm" pInputText type="text" [value]="rowData[col.field]" />
+            <ng-container *ngComponentOutlet=""></ng-container>
+            <app-planner-data-table-coord-field
+              [value]="rowData[col.field]"
+              [coordType]="'latitude'"
+            ></app-planner-data-table-coord-field>
+            <!-- <input class="p-inputtext-sm input-fit-container" pInputText type="number" [value]="rowData[col.field]" /> -->
           </ng-template>
           <ng-template pTemplate="output">
             {{ rowData[col.field] }}

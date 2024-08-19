@@ -4,6 +4,7 @@ import { provideAnimations } from '@angular/platform-browser/animations';
 import { appRoutes } from './app.routes';
 import { AppService, AppServiceFactory } from './core/services/app.service';
 import { MapTileService, MapTileServiceFactory } from './core/services/map-tile.service';
+import { ConfirmationService } from 'primeng/api';
 
 export const appConfig: ApplicationConfig = {
   providers: [

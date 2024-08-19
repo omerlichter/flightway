@@ -122,3 +122,7 @@
     @include scaledPadding($inputPadding, $scaleLG);
   }
 }
+
+.input-fit-container {
+  width: 100%;
+}
