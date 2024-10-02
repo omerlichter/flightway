@@ -347,11 +347,21 @@
     background: var(--surface-100);
   }
 
+  .p-datatable-tbody > tr > td {
+    padding: 0;
+  }
+
   &.p-datatable-striped {
     .p-datatable-tbody {
       > tr:nth-child(even) {
         background: var(--surface-200);
       }
+    }
+  }
+
+  &.p-datatable-sm {
+    .p-datatable-tbody > tr > td {
+      padding: 0 var(--spacing-medium);
     }
   }
 }

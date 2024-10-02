@@ -1,15 +1,4 @@
-import {
-  AfterViewInit,
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  effect,
-  EventEmitter,
-  inject,
-  input,
-  output,
-  Output,
-} from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, effect, inject, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   Draw,
@@ -25,10 +14,14 @@ import {
   polyline,
 } from 'leaflet';
 import 'leaflet-draw';
+import { MissionPoint } from '@drones-app/shared';
 import { MapTileService } from '../../../../../core/services/map-tile.service';
 import { PathTileLayer } from '../../../../../shared/types/path-tile-layer.type';
 import { EditableMap } from '../../../../../shared/types/editable-map.type';
-import { MapPoint, MissionPoint } from '@drones-app/shared';
+import { FSService } from '../../../../../core/services/fs.service';
+import parse_georaster from 'georaster';
+import GeoRasterLayer, { GeoRaster } from 'georaster-layer-for-leaflet';
+import * as proj4 from 'proj4';
 
 @Component({
   selector: 'app-planner-map',
@@ -40,11 +33,12 @@ import { MapPoint, MissionPoint } from '@drones-app/shared';
 })
 export class PlannerMapComponent implements EditableMap, AfterViewInit {
   private readonly _mapTileService = inject(MapTileService);
+  private readonly _fsService = inject(FSService);
 
   public readonly $missionPoints = input.required<Array<MissionPoint>>({ alias: 'missionPoints' });
-  public readonly $homePoint = input.required<MapPoint>({ alias: 'homePoint' });
+  public readonly $homePoint = input.required<MissionPoint>({ alias: 'homePoint' });
 
-  public readonly markerAdded = output<MapPoint>();
+  public readonly markerAdded = output<MissionPoint>();
 
   private _map!: DrawMap;
   private _markersLayer!: FeatureGroup;
@@ -84,6 +78,39 @@ export class PlannerMapComponent implements EditableMap, AfterViewInit {
     this._map.addLayer(
       new PathTileLayer('https://tile.openstreetmap.org', this._mapTileService, { maxZoom: 19, minZoom: 1 })
     );
+
+    this._fsService
+      .getFile('C:\\Users\\omer\\drones_maps\\tiff\\mimad_wgs84u36_r10_0_1.tif')
+      .then((data: ArrayBuffer) => {
+        parse_georaster(data).then((georaster: GeoRaster) => {
+          const tiffLayer = new GeoRasterLayer({
+            georaster: georaster,
+            opacity: 0.7,
+            resolution: 64,
+          });
+          console.log(tiffLayer);
+          tiffLayer.addTo(this._map);
+          this._map.fitBounds(tiffLayer.getBounds());
+
+          const wgs84 = '+proj=longlat +datum=WGS84 +no_defs';
+          const epsg32636 = '+proj=utm +zone=36 +datum=WGS84 +units=m +no_defs';
+
+          // Geographic coordinates (latitude, longitude)
+          const lat = 31.74; // Example latitude
+          const lon = 34.71; // Example longitude
+
+          // Convert to EPSG:32636 (UTM zone 36N)
+          const utmCoords = proj4(wgs84, epsg32636, [lon, lat]);
+
+          const x = Math.floor((34.71 - georaster.xmin) / georaster.pixelWidth);
+          const y = Math.floor((georaster.ymax - 31.74) / georaster.pixelHeight);
+
+          // Get the value at the pixel coordinates (band 0 for single band rasters)
+          const value = georaster.values![0][y][x];
+          console.log(value);
+        });
+      });
+
     this._map.setView([31.698341938933652, 35.08022474362937], 7);
 
     this._markersLayer = featureGroup();
@@ -98,7 +125,7 @@ export class PlannerMapComponent implements EditableMap, AfterViewInit {
       if (type === 'marker') {
         const marker = layer as Marker;
         const { lat, lng } = marker.getLatLng();
-        this.markerAdded.emit({ latitude: lat, longitude: lng, altitude: 100 });
+        this.markerAdded.emit({ category: 'WAYPOINT', latitude: lat, longitude: lng, altitude: 100 });
       }
     });
   }

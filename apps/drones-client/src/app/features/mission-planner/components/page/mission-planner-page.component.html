@@ -2,12 +2,12 @@
   <app-planner-map
     ng-content-main-section
     [homePoint]="$homePoint()"
-    [missionPoints]="$missionPoints()"
+    [missionPoints]="$enrichedMissionPoints()"
     (markerAdded)="onMarkerAdded($event)"
   ></app-planner-map>
   <app-planner-data-table
     ng-content-bottom-section
-    [missionPoints]="$missionPoints()"
+    [missionPoints]="$enrichedMissionPoints()"
     (updateTable)="onUpdateDataTable($event)"
   ></app-planner-data-table>
   <app-planner-toolbar ng-content-toolbar (drawMarker)="onDrawMarker()"></app-planner-toolbar>

@@ -5,6 +5,7 @@ import { appRoutes } from './app.routes';
 import { AppService, AppServiceFactory } from './core/services/app.service';
 import { MapTileService, MapTileServiceFactory } from './core/services/map-tile.service';
 import { ConfirmationService } from 'primeng/api';
+import { FSService, FSServiceFactory } from './core/services/fs.service';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -12,5 +13,6 @@ export const appConfig: ApplicationConfig = {
     provideAnimations(),
     { provide: AppService, useFactory: AppServiceFactory },
     { provide: MapTileService, useFactory: MapTileServiceFactory },
+    { provide: FSService, useFactory: FSServiceFactory },
   ],
 };

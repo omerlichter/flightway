@@ -5,6 +5,7 @@ import { app, BrowserWindow } from 'electron';
 import App from './app/app';
 import registerMapEvents from './app/events/map.events';
 import registerAppEvents from './app/events/app.events';
+import registerFSEvents from './app/events/fs.events';
 
 export default class Main {
   static initialize() {
@@ -22,6 +23,7 @@ export default class Main {
     const ipcMainInstance = ElectronEvents.bootstrapElectronEvents();
     registerAppEvents(ipcMainInstance);
     registerMapEvents(ipcMainInstance);
+    registerFSEvents(ipcMainInstance);
 
     // initialize auto updater service
     if (!App.isDevelopmentMode()) {

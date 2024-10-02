@@ -1,0 +1,13 @@
+@defer (when $field() === 'latitude' ) {
+<app-planner-data-table-coord-field [(value)]="$value" [coordType]="'latitude'"></app-planner-data-table-coord-field>
+} @defer (when $field() === 'longitude' ) {
+<app-planner-data-table-coord-field [(value)]="$value" [coordType]="'longitude'"></app-planner-data-table-coord-field>
+} @defer (when $field() === 'altitude' ) {
+<app-planner-data-table-coord-field [(value)]="$value" [coordType]="'altitude'"></app-planner-data-table-coord-field>
+} @defer (when $field() === 'category' ) {
+<app-planner-data-table-option-field
+  [(value)]="$value"
+  [options]="$any(missionPointCategories)"
+  [placeholder]="'Select Type'"
+></app-planner-data-table-option-field>
+}

@@ -1,33 +1,19 @@
-import { ChangeDetectionStrategy, Component, ComponentRef, computed, inject, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input, model, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TableModule } from 'primeng/table';
-import { MapPoint, MissionPoint } from '@drones-app/shared';
+import { MapPoint, EnrichedMissionPoint, MissionPoint } from '@drones-app/shared';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { FormsModule } from '@angular/forms';
 import { ConfirmationService } from 'primeng/api';
-import { PlannerDataTableCoordFieldComponent } from '../../atoms/planner-data-table-coord-field/planner-data-table-coord-field.component';
-
-type editableColumnConfig<T> = {
-  header: string;
-  field: keyof T;
-  editable: true;
-  inputComponent: any;
-  inputComponentOptions: any;
-};
-
-type nonEditableColumnConfig<T> = {
-  header: string;
-  field: keyof T;
-  editable: false;
-};
-
-type columnConfig<T> = editableColumnConfig<T> | nonEditableColumnConfig<T>;
+import { ColumnConfig } from '../../../../../shared/types/column-config.type';
+import { PlannerDataTableFieldComponent } from '../../atoms/planner-data-table-field/planner-data-table-field.component';
+import { cloneDeep } from 'lodash';
 
 @Component({
   selector: 'app-planner-data-table',
   standalone: true,
-  imports: [CommonModule, FormsModule, TableModule, ButtonModule, InputTextModule, PlannerDataTableCoordFieldComponent],
+  imports: [CommonModule, FormsModule, TableModule, ButtonModule, InputTextModule, PlannerDataTableFieldComponent],
   templateUrl: './planner-data-table.component.html',
   styleUrl: './planner-data-table.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -35,23 +21,29 @@ type columnConfig<T> = editableColumnConfig<T> | nonEditableColumnConfig<T>;
 export class PlannerDataTableComponent {
   private confirmationService = inject(ConfirmationService);
 
-  public readonly $missionPoints = input.required<Array<MissionPoint>>({ alias: 'missionPoints' });
+  public readonly $enrichedMissionPoints = input.required<Array<EnrichedMissionPoint>>({ alias: 'missionPoints' });
+  public readonly $slectedMissionPoint = model<EnrichedMissionPoint | null>(null, { alias: 'slectedMissionPoint' });
 
-  protected readonly $missionPointsDataTable = computed<Array<MissionPoint & { id: number }>>(() =>
-    this.$missionPoints().map((missionPoint, index) => {
+  protected readonly $missionPointsDataTable = computed<Array<EnrichedMissionPoint & { id: number }>>(() =>
+    this.$enrichedMissionPoints().map((missionPoint, index) => {
       return { ...missionPoint, id: index };
     })
   );
 
-  public readonly updateTable = output<Array<MapPoint>>();
+  protected copiedDataTable: Array<EnrichedMissionPoint & { id: number }> = [];
 
-  protected columns: Array<columnConfig<MissionPoint>> = [
+  public readonly updateTable = output<Array<MissionPoint>>();
+
+  protected columns: Array<ColumnConfig<EnrichedMissionPoint>> = [
+    {
+      field: 'category',
+      header: 'Type',
+      editable: true,
+    },
     {
       field: 'latitude',
       header: 'Latitude',
       editable: true,
-      inputComponent: PlannerDataTableCoordFieldComponent,
-      inputComponentOptions: {},
     },
     {
       field: 'longitude',
@@ -62,6 +54,7 @@ export class PlannerDataTableComponent {
       field: 'altitude',
       header: 'Altitude',
       editable: true,
+      units: 'm',
     },
     {
       field: 'gradient',
@@ -89,8 +82,17 @@ export class PlannerDataTableComponent {
     this.updateTable.emit(this.$missionPointsDataTable());
   }
 
-  protected onEditMissionPoint(rowIndex: number, missionPoint: MissionPoint) {
-    console.log(rowIndex, missionPoint);
+  protected onEditInitMissionPoint(rowIndex: number) {
+    this.copiedDataTable[rowIndex] = cloneDeep(this.$missionPointsDataTable()[rowIndex]);
+  }
+
+  protected onEditSaveMissionPoint() {
+    this.onUpdateTable();
+  }
+
+  protected onEditCancelMissionPoint(rowIndex: number) {
+    this.$missionPointsDataTable()[rowIndex] = this.copiedDataTable[rowIndex];
+    delete this.copiedDataTable[rowIndex];
   }
 
   protected onDeleteMissionPoint(rowIndex: number) {

@@ -1,8 +1,6 @@
 import { MapPoint } from './map-point.type';
+import { MissionPointCategory } from './mission-point-category.type';
 
 export interface MissionPoint extends MapPoint {
-  readonly gradient: number;
-  readonly angle: number;
-  readonly distance: number;
-  readonly azimuth: number;
+  readonly category: MissionPointCategory;
 }

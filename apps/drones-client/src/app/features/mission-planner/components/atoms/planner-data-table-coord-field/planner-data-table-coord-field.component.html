@@ -1,8 +1,10 @@
 <p-inputNumber
   class="p-inputtext-sm input-fit-container"
+  required="true"
+  maxFractionDigits="8"
+  [allowEmpty]="false"
   [(ngModel)]="$value"
   [min]="$min()"
   [max]="$max()"
   [suffix]="$suffix()"
-  maxFractionDigits="8"
 />

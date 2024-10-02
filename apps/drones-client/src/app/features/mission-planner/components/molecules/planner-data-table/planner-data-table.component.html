@@ -5,8 +5,10 @@
   [columns]="columns"
   [resizableColumns]="true"
   [reorderableColumns]="true"
-  columnResizeMode="expand"
   [scrollable]="true"
+  [(selection)]="$slectedMissionPoint"
+  selectionMode="single"
+  columnResizeMode="expand"
   scrollHeight="flex"
   dataKey="id"
   editMode="row"
@@ -26,7 +28,7 @@
   </ng-template>
 
   <ng-template pTemplate="body" let-rowData let-columns="columns" let-index="rowIndex" let-editing="editing">
-    <tr [pEditableRow]="rowData" [pReorderableRow]="index">
+    <tr [pSelectableRow]="rowData" [pEditableRow]="rowData" [pReorderableRow]="index">
       <td pFrozenColumn>
         <div class="additional-data-container">
           <span class="pi pi-bars" pReorderableRowHandle></span>
@@ -36,7 +38,14 @@
         <div class="additional-data-container">
           @if (!editing) {
           <div>
-            <button pButton type="button" pInitEditableRow icon="pi pi-pencil" [text]="true"></button>
+            <button
+              pButton
+              type="button"
+              pInitEditableRow
+              icon="pi pi-pencil"
+              [text]="true"
+              (click)="onEditInitMissionPoint(index)"
+            ></button>
             <button
               pButton
               type="button"
@@ -54,7 +63,7 @@
               pSaveEditableRow
               icon="pi pi-check"
               [text]="true"
-              (click)="onEditMissionPoint(index, rowData)"
+              (click)="onEditSaveMissionPoint()"
               class="p-button-success"
             ></button>
             <button
@@ -63,6 +72,7 @@
               pCancelEditableRow
               icon="pi pi-times"
               [text]="true"
+              (click)="onEditCancelMissionPoint(index)"
               class="p-button-danger"
             ></button>
           </div>
@@ -79,15 +89,16 @@
         @if (col.editable) {
         <p-cellEditor>
           <ng-template pTemplate="input">
-            <ng-container *ngComponentOutlet=""></ng-container>
-            <app-planner-data-table-coord-field
-              [value]="rowData[col.field]"
-              [coordType]="'latitude'"
-            ></app-planner-data-table-coord-field>
-            <!-- <input class="p-inputtext-sm input-fit-container" pInputText type="number" [value]="rowData[col.field]" /> -->
+            <app-planner-data-table-field
+              [(value)]="rowData[col.field]"
+              [field]="col.field"
+            ></app-planner-data-table-field>
           </ng-template>
           <ng-template pTemplate="output">
-            {{ rowData[col.field] }}
+            <span>{{ rowData[col.field] }}</span>
+            @if(col.units; as units) {
+            <span>{{ units }}</span>
+            }
           </ng-template>
         </p-cellEditor>
         } @else {

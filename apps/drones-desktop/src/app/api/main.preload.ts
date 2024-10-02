@@ -10,6 +10,9 @@ const apiContextBridge: ApiContextBridge = {
     getMapTile: (baseUrl: string, z: number, x: number, y: number) =>
       ipcRenderer.invoke('get-map-tile', baseUrl, z, x, y),
   },
+  fs: {
+    getFile: (url: string) => ipcRenderer.invoke('get-file', url),
+  },
 };
 
 contextBridge.exposeInMainWorld('electron', apiContextBridge);
