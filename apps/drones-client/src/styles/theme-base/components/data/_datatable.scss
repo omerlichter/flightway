@@ -127,16 +127,16 @@
       }
 
       &.p-highlight {
-        background: $highlightBg;
+        background: $tableBodyRowHighlightBg;
         color: $highlightTextColor;
       }
 
       &.p-datatable-dragpoint-top > td {
-        box-shadow: inset 0 2px 0 0 $highlightBg;
+        box-shadow: inset 0 2px 0 0 $tableBodyRowHighlightBg;
       }
 
       &.p-datatable-dragpoint-bottom > td {
-        box-shadow: inset 0 -2px 0 0 $highlightBg;
+        box-shadow: inset 0 -2px 0 0 $tableBodyRowHighlightBg;
       }
     }
   }
@@ -277,7 +277,7 @@
         background: $tableBodyRowEvenBg;
 
         &.p-highlight {
-          background: $highlightBg;
+          background: $tableBodyRowHighlightBg;
           color: $highlightTextColor;
 
           .p-row-toggler {
@@ -364,4 +364,16 @@
       padding: 0 var(--spacing-medium);
     }
   }
+
+  // .p-datatable-tbody {
+  //   > tr {
+  //     &.p-highlight {
+  //       background: var(--primary-800) !important;
+  //     }
+
+  //     &:not(.p-highlight):hover {
+  //       background: var(--primary-900) !important;
+  //     }
+  //   }
+  // }
 }

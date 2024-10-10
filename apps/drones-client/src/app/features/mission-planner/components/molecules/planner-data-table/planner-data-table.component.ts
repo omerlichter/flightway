@@ -1,19 +1,29 @@
 import { ChangeDetectionStrategy, Component, computed, inject, input, model, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TableModule } from 'primeng/table';
-import { MapPoint, EnrichedMissionPoint, MissionPoint } from '@drones-app/shared';
-import { ButtonModule } from 'primeng/button';
+import { EnrichedMissionPoint, MissionPoint } from '@drones-app/shared';
 import { InputTextModule } from 'primeng/inputtext';
 import { FormsModule } from '@angular/forms';
 import { ConfirmationService } from 'primeng/api';
-import { ColumnConfig } from '../../../../../shared/types/column-config.type';
 import { PlannerDataTableFieldComponent } from '../../atoms/planner-data-table-field/planner-data-table-field.component';
 import { cloneDeep } from 'lodash';
+import { PlannerDataTableActionsFieldComponent } from '../../atoms/planner-data-table-actions-field/planner-data-table-actions-field.component';
+import {
+  PlannerDataTableHomeRowConfig,
+  PlannerDataTableRowConfig,
+} from '../../../config/planner-data-table-row.config';
 
 @Component({
   selector: 'app-planner-data-table',
   standalone: true,
-  imports: [CommonModule, FormsModule, TableModule, ButtonModule, InputTextModule, PlannerDataTableFieldComponent],
+  imports: [
+    CommonModule,
+    FormsModule,
+    TableModule,
+    InputTextModule,
+    PlannerDataTableFieldComponent,
+    PlannerDataTableActionsFieldComponent,
+  ],
   templateUrl: './planner-data-table.component.html',
   styleUrl: './planner-data-table.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -22,7 +32,7 @@ export class PlannerDataTableComponent {
   private confirmationService = inject(ConfirmationService);
 
   public readonly $enrichedMissionPoints = input.required<Array<EnrichedMissionPoint>>({ alias: 'missionPoints' });
-  public readonly $slectedMissionPoint = model<EnrichedMissionPoint | null>(null, { alias: 'slectedMissionPoint' });
+  public readonly $selectedMissionPoint = model<EnrichedMissionPoint | null>(null, { alias: 'selectedMissionPoint' });
 
   protected readonly $missionPointsDataTable = computed<Array<EnrichedMissionPoint & { id: number }>>(() =>
     this.$enrichedMissionPoints().map((missionPoint, index) => {
@@ -30,53 +40,12 @@ export class PlannerDataTableComponent {
     })
   );
 
+  protected rowConfig = PlannerDataTableRowConfig;
+  protected homeRowConfig = PlannerDataTableHomeRowConfig;
+
   protected copiedDataTable: Array<EnrichedMissionPoint & { id: number }> = [];
 
   public readonly updateTable = output<Array<MissionPoint>>();
-
-  protected columns: Array<ColumnConfig<EnrichedMissionPoint>> = [
-    {
-      field: 'category',
-      header: 'Type',
-      editable: true,
-    },
-    {
-      field: 'latitude',
-      header: 'Latitude',
-      editable: true,
-    },
-    {
-      field: 'longitude',
-      header: 'Longitude',
-      editable: true,
-    },
-    {
-      field: 'altitude',
-      header: 'Altitude',
-      editable: true,
-      units: 'm',
-    },
-    {
-      field: 'gradient',
-      header: 'Gradient',
-      editable: false,
-    },
-    {
-      field: 'angle',
-      header: 'Angle',
-      editable: false,
-    },
-    {
-      field: 'distance',
-      header: 'Distance',
-      editable: false,
-    },
-    {
-      field: 'azimuth',
-      header: 'Azimuth',
-      editable: false,
-    },
-  ];
 
   protected onUpdateTable() {
     this.updateTable.emit(this.$missionPointsDataTable());

@@ -32,16 +32,18 @@ import {
 export class MissionPlannerPageComponent implements OnInit {
   private _$editableMapComponent = viewChild.required<EditableMap>(PlannerMapComponent);
 
-  protected $missionPoints = signal<Array<MissionPoint>>([]);
-  protected $homePoint = signal<MissionPoint>({
-    category: 'TAKEOFF',
-    latitude: 32.0766323,
-    longitude: 35.0839419,
-    altitude: 350.7099914,
-  });
+  protected $missionPoints = signal<Array<MissionPoint>>([
+    {
+      special: 'HOME',
+      category: 'TAKEOFF',
+      latitude: 32.0766323,
+      longitude: 35.0839419,
+      altitude: 350.7099914,
+    },
+  ]);
+
   protected $enrichedMissionPoints = computed<Array<EnrichedMissionPoint>>(() => {
-    console.log('update');
-    let prevPoint = this.$homePoint();
+    let prevPoint = this.$missionPoints()[0];
 
     return this.$missionPoints().map((point: MissionPoint) => {
       const height = point.altitude - prevPoint.altitude;
@@ -52,6 +54,7 @@ export class MissionPlannerPageComponent implements OnInit {
       prevPoint = point;
 
       return {
+        special: point.special,
         latitude: point.latitude,
         longitude: point.longitude,
         altitude: point.altitude,
@@ -65,8 +68,20 @@ export class MissionPlannerPageComponent implements OnInit {
   });
 
   public ngOnInit(): void {
-    this.onMarkerAdded({ category: 'WAYPOINT', latitude: 31.88473061, longitude: 34.82609668, altitude: 100 });
-    this.onMarkerAdded({ category: 'WAYPOINT', latitude: 31.88968952, longitude: 34.827940782, altitude: 50 });
+    this.onMarkerAdded({
+      special: 'REGULAR',
+      category: 'WAYPOINT',
+      latitude: 31.88473061,
+      longitude: 34.82609668,
+      altitude: 100,
+    });
+    this.onMarkerAdded({
+      special: 'REGULAR',
+      category: 'WAYPOINT',
+      latitude: 31.88968952,
+      longitude: 34.827940782,
+      altitude: 50,
+    });
   }
 
   protected onDrawMarker(): void {

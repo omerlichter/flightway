@@ -1,7 +1,6 @@
 <app-mission-planner-page-layout>
   <app-planner-map
     ng-content-main-section
-    [homePoint]="$homePoint()"
     [missionPoints]="$enrichedMissionPoints()"
     (markerAdded)="onMarkerAdded($event)"
   ></app-planner-map>

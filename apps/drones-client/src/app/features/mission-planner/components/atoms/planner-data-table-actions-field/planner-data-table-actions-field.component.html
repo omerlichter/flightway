@@ -1,0 +1,29 @@
+@if (!$editing()) {
+<div>
+  <button pButton type="button" pInitEditableRow icon="pi pi-pencil" [text]="true" (click)="onEdit()"></button>
+  @if ($hasDelete()) {
+  <button pButton type="button" icon="pi pi-trash" [text]="true" class="p-button-danger" (click)="onDelete()"></button>
+  }
+</div>
+} @else {
+<div>
+  <button
+    pButton
+    type="button"
+    pSaveEditableRow
+    icon="pi pi-check"
+    [text]="true"
+    (click)="onSave()"
+    class="p-button-success"
+  ></button>
+  <button
+    pButton
+    type="button"
+    pCancelEditableRow
+    icon="pi pi-times"
+    [text]="true"
+    (click)="onCancel()"
+    class="p-button-danger"
+  ></button>
+</div>
+}

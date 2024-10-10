@@ -36,7 +36,6 @@ export class PlannerMapComponent implements EditableMap, AfterViewInit {
   private readonly _fsService = inject(FSService);
 
   public readonly $missionPoints = input.required<Array<MissionPoint>>({ alias: 'missionPoints' });
-  public readonly $homePoint = input.required<MissionPoint>({ alias: 'homePoint' });
 
   public readonly markerAdded = output<MissionPoint>();
 
@@ -49,24 +48,25 @@ export class PlannerMapComponent implements EditableMap, AfterViewInit {
       this._markersLayer.clearLayers();
       this._pathLayer.clearLayers();
 
-      const homePoint = this.$homePoint();
-      marker([homePoint.latitude, homePoint.longitude])
-        .bindPopup(() => `<b>H</b><br>latitude: ${homePoint.latitude}, longitude: ${homePoint.longitude}`)
-        .addTo(this._markersLayer);
-
       this.$missionPoints().forEach((point: MissionPoint, index: number) => {
-        marker([point.latitude, point.longitude])
-          .bindPopup(() => `<b>${index}</b><br>latitude: ${point.latitude}, longitude: ${point.longitude}`)
-          .addTo(this._markersLayer);
+        if (point.special === 'HOME') {
+          marker([point.latitude, point.longitude])
+            .bindPopup(
+              () =>
+                `<b>H</b><br>latitude: ${point.latitude}<br>longitude: ${point.longitude}<br>altitude: ${point.altitude}`
+            )
+            .addTo(this._markersLayer);
+        } else {
+          marker([point.latitude, point.longitude])
+            .bindPopup(
+              () =>
+                `<b>${index}</b><br>latitude: ${point.latitude}<br>longitude: ${point.longitude}<br>altitude: ${point.altitude}`
+            )
+            .addTo(this._markersLayer);
+        }
       });
       polyline(
-        [
-          [homePoint.latitude, homePoint.longitude],
-          ...(this.$missionPoints().map((point: MissionPoint) => [
-            point.latitude,
-            point.longitude,
-          ]) as LatLngExpression[]),
-        ],
+        this.$missionPoints().map((point: MissionPoint) => [point.latitude, point.longitude]) as LatLngExpression[],
         { color: 'red', dashArray: [1, 10] }
       ).addTo(this._pathLayer);
     });
@@ -125,7 +125,13 @@ export class PlannerMapComponent implements EditableMap, AfterViewInit {
       if (type === 'marker') {
         const marker = layer as Marker;
         const { lat, lng } = marker.getLatLng();
-        this.markerAdded.emit({ category: 'WAYPOINT', latitude: lat, longitude: lng, altitude: 100 });
+        this.markerAdded.emit({
+          special: 'REGULAR',
+          category: 'WAYPOINT',
+          latitude: lat,
+          longitude: lng,
+          altitude: 100,
+        });
       }
     });
   }

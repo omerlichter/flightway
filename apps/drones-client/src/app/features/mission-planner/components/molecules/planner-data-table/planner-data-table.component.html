@@ -2,11 +2,11 @@
   class="data-table"
   styleClass="p-datatable-striped p-datatable-gridlines p-datatable-sm planner-data-table"
   [value]="$missionPointsDataTable()"
-  [columns]="columns"
+  [columns]="rowConfig"
   [resizableColumns]="true"
   [reorderableColumns]="true"
   [scrollable]="true"
-  [(selection)]="$slectedMissionPoint"
+  [(selection)]="$selectedMissionPoint"
   selectionMode="single"
   columnResizeMode="expand"
   scrollHeight="flex"
@@ -18,7 +18,7 @@
     <tr>
       <th style="min-width: 40px; width: 40px" pFrozenColumn></th>
       <th style="width: 120px" pFrozenColumn></th>
-      <th style="min-width: 40px; width: 40px">
+      <th style="min-width: 40px; width: 40px" pFrozenColumn>
         <div class="additional-data-container">#</div>
       </th>
       <th *ngFor="let col of columns" pResizableColumn>
@@ -28,6 +28,47 @@
   </ng-template>
 
   <ng-template pTemplate="body" let-rowData let-columns="columns" let-index="rowIndex" let-editing="editing">
+    @if (rowData.special === 'HOME') {
+    <tr [pSelectableRow]="rowData" [pEditableRow]="rowData">
+      <td pFrozenColumn></td>
+      <td pFrozenColumn>
+        <app-planner-data-table-actions-field
+          [editing]="editing"
+          [hasDelete]="false"
+          (edit)="onEditInitMissionPoint(index)"
+          (save)="onEditSaveMissionPoint()"
+          (cancel)="onEditCancelMissionPoint(index)"
+        ></app-planner-data-table-actions-field>
+      </td>
+      <td pFrozenColumn>
+        <div class="additional-data-container">
+          <span>H</span>
+        </div>
+      </td>
+      @for (col of homeRowConfig; track $index) {
+      <td>
+        @if (col.editable) {
+        <p-cellEditor>
+          <ng-template pTemplate="input">
+            <app-planner-data-table-field
+              [(value)]="rowData[col.field]"
+              [field]="col.field"
+            ></app-planner-data-table-field>
+          </ng-template>
+          <ng-template pTemplate="output">
+            <span>{{ rowData[col.field] }}</span>
+            @if(col.units; as units) {
+            <span>{{ units }}</span>
+            }
+          </ng-template>
+        </p-cellEditor>
+        } @else {
+        {{ rowData[col.field] }}
+        }
+      </td>
+      }
+    </tr>
+    } @else {
     <tr [pSelectableRow]="rowData" [pEditableRow]="rowData" [pReorderableRow]="index">
       <td pFrozenColumn>
         <div class="additional-data-container">
@@ -35,51 +76,15 @@
         </div>
       </td>
       <td pFrozenColumn>
-        <div class="additional-data-container">
-          @if (!editing) {
-          <div>
-            <button
-              pButton
-              type="button"
-              pInitEditableRow
-              icon="pi pi-pencil"
-              [text]="true"
-              (click)="onEditInitMissionPoint(index)"
-            ></button>
-            <button
-              pButton
-              type="button"
-              icon="pi pi-trash"
-              [text]="true"
-              class="p-button-danger"
-              (click)="onDeleteMissionPoint(index)"
-            ></button>
-          </div>
-          } @else {
-          <div>
-            <button
-              pButton
-              type="button"
-              pSaveEditableRow
-              icon="pi pi-check"
-              [text]="true"
-              (click)="onEditSaveMissionPoint()"
-              class="p-button-success"
-            ></button>
-            <button
-              pButton
-              type="button"
-              pCancelEditableRow
-              icon="pi pi-times"
-              [text]="true"
-              (click)="onEditCancelMissionPoint(index)"
-              class="p-button-danger"
-            ></button>
-          </div>
-          }
-        </div>
+        <app-planner-data-table-actions-field
+          [editing]="editing"
+          (edit)="onEditInitMissionPoint(index)"
+          (delete)="onDeleteMissionPoint(index)"
+          (save)="onEditSaveMissionPoint()"
+          (cancel)="onEditCancelMissionPoint(index)"
+        ></app-planner-data-table-actions-field>
       </td>
-      <td>
+      <td pFrozenColumn>
         <div class="additional-data-container">
           <span>{{ index }}</span>
         </div>
@@ -107,5 +112,6 @@
       </td>
       }
     </tr>
+    }
   </ng-template>
 </p-table>
