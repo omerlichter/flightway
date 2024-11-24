@@ -36,8 +36,10 @@ export class PlannerMapComponent implements EditableMap, AfterViewInit {
   private readonly _fsService = inject(FSService);
 
   public readonly $missionPoints = input.required<Array<MissionPoint>>({ alias: 'missionPoints' });
+  public readonly $selectedMissionPointIndex = input.required<number | null>({ alias: 'selectedMissionPointIndex' });
 
   public readonly markerAdded = output<MissionPoint>();
+  public readonly markerClicked = output<number | null>();
 
   private _map!: DrawMap;
   private _markersLayer!: FeatureGroup;
@@ -55,20 +57,30 @@ export class PlannerMapComponent implements EditableMap, AfterViewInit {
               () =>
                 `<b>H</b><br>latitude: ${point.latitude}<br>longitude: ${point.longitude}<br>altitude: ${point.altitude}`
             )
-            .addTo(this._markersLayer);
+            .addTo(this._markersLayer)
+            .on('dblclick', () => this.markerClicked.emit(index));
         } else {
           marker([point.latitude, point.longitude])
             .bindPopup(
               () =>
                 `<b>${index}</b><br>latitude: ${point.latitude}<br>longitude: ${point.longitude}<br>altitude: ${point.altitude}`
             )
-            .addTo(this._markersLayer);
+            .addTo(this._markersLayer)
+            .on('dblclick', () => this.markerClicked.emit(index));
         }
       });
       polyline(
         this.$missionPoints().map((point: MissionPoint) => [point.latitude, point.longitude]) as LatLngExpression[],
         { color: 'red', dashArray: [1, 10] }
       ).addTo(this._pathLayer);
+    });
+
+    effect(() => {
+      const selectedIndex = this.$selectedMissionPointIndex();
+      if (selectedIndex !== null) {
+        const point = this.$missionPoints()[selectedIndex];
+        this._map.flyTo({ alt: point.altitude, lng: point.longitude, lat: point.latitude });
+      }
     });
   }
 

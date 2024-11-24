@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, OnInit, signal, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, model, OnInit, signal, viewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MissionPlannerPageLayoutComponent } from '../layouts/mission-planner-page-layout/mission-planner-page-layout.component';
 import { PlannerMapComponent } from '../organisms/planner-map/planner-map.component';
@@ -67,6 +67,8 @@ export class MissionPlannerPageComponent implements OnInit {
     });
   });
 
+  protected $selectedMissionPointIndex = signal<number | null>(null);
+
   public ngOnInit(): void {
     this.onMarkerAdded({
       special: 'REGULAR',
@@ -94,5 +96,13 @@ export class MissionPlannerPageComponent implements OnInit {
 
   protected onUpdateDataTable(missionMapPoints: Array<MissionPoint>) {
     this.$missionPoints.set([...missionMapPoints]);
+  }
+
+  protected onMakerClicked(index: number | null) {
+    this.$selectedMissionPointIndex.set(index);
+  }
+
+  protected onSelectMissionPointIndex(index: number | null) {
+    this.$selectedMissionPointIndex.set(index);
   }
 }

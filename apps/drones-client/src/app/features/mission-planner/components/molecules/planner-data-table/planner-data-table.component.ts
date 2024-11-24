@@ -1,4 +1,14 @@
-import { ChangeDetectionStrategy, Component, computed, inject, input, model, output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  effect,
+  inject,
+  input,
+  model,
+  output,
+  signal,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TableModule } from 'primeng/table';
 import { EnrichedMissionPoint, MissionPoint } from '@drones-app/shared';
@@ -32,7 +42,7 @@ export class PlannerDataTableComponent {
   private confirmationService = inject(ConfirmationService);
 
   public readonly $enrichedMissionPoints = input.required<Array<EnrichedMissionPoint>>({ alias: 'missionPoints' });
-  public readonly $selectedMissionPoint = model<EnrichedMissionPoint | null>(null, { alias: 'selectedMissionPoint' });
+  public readonly $selectedMissionPointIndex = input.required<number | null>({ alias: 'selectedMissionPointIndex' });
 
   protected readonly $missionPointsDataTable = computed<Array<EnrichedMissionPoint & { id: number }>>(() =>
     this.$enrichedMissionPoints().map((missionPoint, index) => {
@@ -40,12 +50,41 @@ export class PlannerDataTableComponent {
     })
   );
 
+  protected readonly $selectionDataTable = signal<(EnrichedMissionPoint & { id: number }) | null>(null);
+
   protected rowConfig = PlannerDataTableRowConfig;
   protected homeRowConfig = PlannerDataTableHomeRowConfig;
 
   protected copiedDataTable: Array<EnrichedMissionPoint & { id: number }> = [];
 
   public readonly updateTable = output<Array<MissionPoint>>();
+  public readonly selectMissionPointIndex = output<number | null>();
+
+  constructor() {
+    effect(
+      () => {
+        const selectionPoint = this.$selectionDataTable();
+        if (selectionPoint) {
+          this.selectMissionPointIndex.emit(selectionPoint.id);
+        } else {
+          this.selectMissionPointIndex.emit(null);
+        }
+      },
+      { allowSignalWrites: true }
+    );
+
+    effect(
+      () => {
+        const selectionPointIndex = this.$selectedMissionPointIndex();
+        if (selectionPointIndex !== null) {
+          this.$selectionDataTable.set(this.$missionPointsDataTable()[selectionPointIndex]);
+        } else {
+          this.$selectionDataTable.set(null);
+        }
+      },
+      { allowSignalWrites: true }
+    );
+  }
 
   protected onUpdateTable() {
     this.updateTable.emit(this.$missionPointsDataTable());
