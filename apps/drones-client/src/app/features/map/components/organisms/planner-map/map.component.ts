@@ -21,20 +21,16 @@ import { MapTileService } from '../../../../../core/services/map-tile.service';
 import { PathTileLayer } from '../../../classes/path-tile-layer.type';
 import { EditableMap } from '../../../classes/editable-map.type';
 import { FSService } from '../../../../../core/services/fs.service';
+import { MapLayer, MapLayerType } from '../../../../../features/map/types/map-layer.type';
+import { MapLayersComponent } from '../../molecules/map-layers/map-layers.component';
 import parse_georaster from 'georaster';
 import GeoRasterLayer, { GeoRaster } from 'georaster-layer-for-leaflet';
 import * as proj4 from 'proj4';
-import {
-  TileMapLayer,
-  HeightMapLayer,
-  MapLayer,
-  MapLayerType,
-} from 'apps/drones-client/src/app/features/map/types/map-layer.type';
 
 @Component({
   selector: 'app-planner-map',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, MapLayersComponent],
   templateUrl: './map.component.html',
   styleUrl: './map.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -48,7 +44,7 @@ export class MapComponent implements EditableMap, AfterViewInit {
 
   public readonly $mapLayers = input<Array<MapLayer>>(
     [
-      { name: 'open street map', type: 'tile', url: 'https://tile.openstreetmap.org' },
+      { name: 'open street map', type: 'tile', url: 'https://tile.openstreetmap.org', selected: true },
       // { name: 'open street map', type: 'tile', url: 'file://D:/drones/drones-maps/osm' },
     ],
     { alias: 'baseMapLayers' }

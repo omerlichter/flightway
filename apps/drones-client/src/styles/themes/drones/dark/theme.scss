@@ -4,3 +4,16 @@
 @import '../_spacings';
 @import '../_font-sizes';
 @import '../_extensions';
+
+::ng-deep {
+  .leaflet-control-zoom,
+  .leaflet-touch .leaflet-bar {
+    /* Styles for the container of the Zoom Control */
+    border: unset;
+
+    a {
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(5px);
+    }
+  }
+}

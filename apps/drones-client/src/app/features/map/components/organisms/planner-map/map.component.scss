@@ -1,5 +1,16 @@
 :host {
+  position: relative;
+  isolation: isolate;
+
   #map {
     height: 100%;
+  }
+
+  .layers {
+    position: absolute;
+    top: var(--spacing-large);
+    right: var(--spacing-large);
+    z-index: 1000;
+    width: 300px;
   }
 }
