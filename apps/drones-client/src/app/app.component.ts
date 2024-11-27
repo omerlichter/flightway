@@ -11,4 +11,24 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })
-export class AppComponent {}
+export class AppComponent {
+  constructor() {
+    document.addEventListener('drop', (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+    });
+
+    document.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+    });
+
+    document.addEventListener('dragenter', (event) => {
+      return false;
+    });
+
+    document.addEventListener('dragleave', (event) => {
+      return false;
+    });
+  }
+}

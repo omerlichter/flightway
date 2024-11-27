@@ -1,5 +1,5 @@
 import { ApiContextBridge } from '@drones-app/shared';
-import { contextBridge, ipcRenderer } from 'electron';
+import { contextBridge, ipcRenderer, webUtils } from 'electron';
 
 const apiContextBridge: ApiContextBridge = {
   app: {
@@ -11,6 +11,7 @@ const apiContextBridge: ApiContextBridge = {
       ipcRenderer.invoke('get-map-tile', baseUrl, z, x, y),
   },
   fs: {
+    getFilePath: (file: File) => webUtils.getPathForFile(file),
     getFile: (url: string) => ipcRenderer.invoke('get-file', url),
   },
 };

@@ -1,19 +1,19 @@
-import { ChangeDetectionStrategy, Component, computed, effect, model, OnInit, signal, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal, viewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MissionPlannerPageLayoutComponent } from '../layouts/mission-planner-page-layout/mission-planner-page-layout.component';
-import { PlannerMapComponent } from '../organisms/planner-map/planner-map.component';
-import { EditableMap } from '../../../../shared/types/editable-map.type';
+import { MapComponent } from '../../../map/components/organisms/planner-map/map.component';
+import { EditableMap } from '../../../map/classes/editable-map.type';
 import { PlannerToolbarComponent } from '../molecules/planner-toolbar/planner-toolbar.component';
 import { PlannerDataTableComponent } from '../molecules/planner-data-table/planner-data-table.component';
 import {
   calcBearing,
   calcGeoDistance,
   calcGradient,
-  MapPoint,
   EnrichedMissionPoint,
   rad2deg,
   MissionPoint,
 } from '@drones-app/shared';
+import { FSService } from 'apps/drones-client/src/app/core/services/fs.service';
 
 @Component({
   selector: 'app-mission-planner-page',
@@ -21,7 +21,7 @@ import {
   imports: [
     CommonModule,
     MissionPlannerPageLayoutComponent,
-    PlannerMapComponent,
+    MapComponent,
     PlannerDataTableComponent,
     PlannerToolbarComponent,
   ],
@@ -30,7 +30,8 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MissionPlannerPageComponent implements OnInit {
-  private _$editableMapComponent = viewChild.required<EditableMap>(PlannerMapComponent);
+  private _fsService = inject(FSService);
+  private _$editableMapComponent = viewChild.required<EditableMap>(MapComponent);
 
   protected $missionPoints = signal<Array<MissionPoint>>([
     {
@@ -84,6 +85,19 @@ export class MissionPlannerPageComponent implements OnInit {
       longitude: 34.827940782,
       altitude: 50,
     });
+  }
+
+  protected onDropMap(event: DragEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+
+    const files = event.dataTransfer?.files;
+
+    if (files) {
+      for (const file of files) {
+        console.log(this._fsService.getFilePath(file));
+      }
+    }
   }
 
   protected onDrawMarker(): void {

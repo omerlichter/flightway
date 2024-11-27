@@ -26,7 +26,7 @@ async function tileMapStringFileSystem(path: string, z: number, x: number, y: nu
       return `data:image/png;base64,${base64Image}`;
     })
     .catch(() => {
-      return 'a';
+      throw new Error('tile map file not found');
     });
 }
 

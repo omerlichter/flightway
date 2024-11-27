@@ -5,6 +5,7 @@
     [selectedMissionPointIndex]="$selectedMissionPointIndex()"
     (markerAdded)="onMarkerAdded($event)"
     (markerClicked)="onMakerClicked($event)"
+    (drop)="onDropMap($event)"
   ></app-planner-map>
   <app-planner-data-table
     ng-content-bottom-section

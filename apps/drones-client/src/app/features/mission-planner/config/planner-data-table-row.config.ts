@@ -1,5 +1,5 @@
 import { EnrichedMissionPoint, MissionPoint } from '@drones-app/shared';
-import { ColumnConfig } from '../../../shared/types/column-config.type';
+import { ColumnConfig } from '../types/column-config.type';
 
 export const PlannerDataTableHomeRowConfig: Array<ColumnConfig<MissionPoint>> = [
   {

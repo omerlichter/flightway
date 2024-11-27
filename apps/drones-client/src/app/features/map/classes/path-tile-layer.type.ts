@@ -1,5 +1,5 @@
 import { Coords, DoneCallback, GridLayer, GridLayerOptions } from 'leaflet';
-import { MapTileService } from '../../core/services/map-tile.service';
+import { MapTileService } from '../../../core/services/map-tile.service';
 
 export class PathTileLayer extends GridLayer {
   private _tilePath: string;

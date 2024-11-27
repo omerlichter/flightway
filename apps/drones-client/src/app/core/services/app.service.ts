@@ -1,4 +1,4 @@
-import { Injectable, signal, Signal } from '@angular/core';
+import { signal, Signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { from } from 'rxjs';
 

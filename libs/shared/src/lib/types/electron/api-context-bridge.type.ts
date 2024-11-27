@@ -7,6 +7,7 @@ export interface ApiContextBridge {
     getMapTile: (baseUrl: string, z: number, x: number, y: number) => Promise<string>;
   };
   fs: {
+    getFilePath: (file: File) => string;
     getFile: (url: string) => Promise<ArrayBuffer>;
   };
 }
