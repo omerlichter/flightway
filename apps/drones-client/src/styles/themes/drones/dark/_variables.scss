@@ -132,9 +132,9 @@ $passwordMediumBg: #ffcf91 !default;
 $passwordStrongBg: #93deac !default;
 
 //button
-$buttonPadding: 0.75rem 1.25rem !default;
-$buttonIconOnlyWidth: 3rem !default;
-$buttonIconOnlyPadding: 0.75rem 0 !default;
+$buttonPadding: 0.5rem 1.25rem !default;
+$buttonIconOnlyWidth: 2.5rem !default;
+$buttonIconOnlyPadding: 0.5rem 0 !default;
 $buttonBg: $primaryColor !default;
 $buttonTextColor: $primaryTextColor !default;
 $buttonBorder: 1px solid $primaryColor !default;
@@ -238,8 +238,8 @@ $linkButtonTextHoverDecoration: underline !default;
 $linkButtonFocusShadow: 0 0 0 1px $focusOutlineColor !default;
 
 //checkbox
-$checkboxWidth: 22px !default;
-$checkboxHeight: 22px !default;
+$checkboxWidth: 20px !default;
+$checkboxHeight: 20px !default;
 $checkboxBorder: 2px solid $shade600 !default;
 $checkboxIconFontSize: 14px !default;
 $checkboxActiveBorderColor: $primaryColor !default;
@@ -550,9 +550,9 @@ $dataViewContentPadding: 0 !default;
 $dataViewContentBorder: 0 none !default;
 
 //tree
-$treeContainerPadding: 0.286rem !default;
-$treeNodePadding: 0.143rem !default;
-$treeNodeContentPadding: 0.5rem !default;
+$treeContainerPadding: 0 !default;
+$treeNodePadding: 0 !default;
+$treeNodeContentPadding: 0.3rem !default;
 $treeNodeChildrenPadding: 0 0 0 1rem !default;
 $treeNodeIconColor: $shade100 !default;
 

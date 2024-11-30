@@ -45,7 +45,8 @@ export class MapComponent implements EditableMap, AfterViewInit {
   public readonly $mapLayers = input<Array<MapLayer>>(
     [
       { name: 'open street map', type: 'tile', url: 'https://tile.openstreetmap.org', selected: true },
-      // { name: 'open street map', type: 'tile', url: 'file://D:/drones/drones-maps/osm' },
+      { name: 'osdasdasd', type: 'tile', url: 'https://tile.openstreetmap.org', selected: true },
+      { name: 'open street map', type: 'height', url: 'file://D:/drones/drones-maps/osm', opacity: 1, selected: true },
     ],
     { alias: 'baseMapLayers' }
   );
@@ -132,7 +133,7 @@ export class MapComponent implements EditableMap, AfterViewInit {
 
   public ngAfterViewInit(): void {
     // create map
-    this._map = map('map', { layers: [] });
+    this._map = map('map', { layers: [], zoomControl: false });
 
     // add layers
     Object.values(this._mapLayers).forEach((layerGroup) => {

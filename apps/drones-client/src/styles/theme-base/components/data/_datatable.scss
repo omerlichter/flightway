@@ -361,7 +361,7 @@
 
   &.p-datatable-sm {
     .p-datatable-tbody > tr > td {
-      padding: 0 var(--spacing-medium);
+      padding: var(--spacing-small-100) var(--spacing-medium);
     }
   }
 

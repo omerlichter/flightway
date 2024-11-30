@@ -8,8 +8,8 @@
 
   .layers {
     position: absolute;
-    top: var(--spacing-large);
-    right: var(--spacing-large);
+    top: var(--spacing-medium);
+    left: var(--spacing-medium);
     z-index: 1000;
     width: 300px;
   }

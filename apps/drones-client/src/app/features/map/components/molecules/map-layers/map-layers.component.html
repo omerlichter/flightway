@@ -1,1 +1,8 @@
-<p-tree styleClass="map-layers-tree" [value]="$treeLayers()" class="w-full md:w-30rem" selectionMode="checkbox" />
+<p-tree
+  styleClass="map-layers-tree"
+  [value]="$treeLayers()"
+  class="w-full md:w-30rem"
+  selectionMode="checkbox"
+  [draggableNodes]="true"
+  [droppableNodes]="true"
+/>
