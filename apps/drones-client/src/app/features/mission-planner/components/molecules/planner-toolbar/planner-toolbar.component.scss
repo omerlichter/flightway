@@ -6,5 +6,6 @@
   gap: var(--spacing-medium-100);
 
   background-color: var(--surface-100);
-  padding: var(--spacing-medium-100);
+  padding-block: var(--spacing-medium-100);
+  padding-inline: var(--spacing-small-200);
 }

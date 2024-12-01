@@ -1,4 +1,14 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, effect, inject, input, output } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  effect,
+  ElementRef,
+  inject,
+  input,
+  output,
+  viewChild,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   Draw,
@@ -39,15 +49,13 @@ export class MapComponent implements EditableMap, AfterViewInit {
   private readonly _mapTileService = inject(MapTileService);
   private readonly _fsService = inject(FSService);
 
+  private readonly _mapElement = viewChild.required<ElementRef<HTMLElement>>('map');
+
   public readonly $missionPoints = input.required<Array<MissionPoint>>({ alias: 'missionPoints' });
   public readonly $selectedMissionPointIndex = input.required<number | null>({ alias: 'selectedMissionPointIndex' });
 
   public readonly $mapLayers = input<Array<MapLayer>>(
-    [
-      { name: 'open street map', type: 'tile', url: 'https://tile.openstreetmap.org', selected: true },
-      { name: 'osdasdasd', type: 'tile', url: 'https://tile.openstreetmap.org', selected: true },
-      { name: 'open street map', type: 'height', url: 'file://D:/drones/drones-maps/osm', opacity: 1, selected: true },
-    ],
+    [{ name: 'open street map', type: 'tile', url: 'https://tile.openstreetmap.org', selected: true }],
     { alias: 'baseMapLayers' }
   );
 
@@ -133,7 +141,13 @@ export class MapComponent implements EditableMap, AfterViewInit {
 
   public ngAfterViewInit(): void {
     // create map
-    this._map = map('map', { layers: [], zoomControl: false });
+    this._map = map(this._mapElement().nativeElement, { layers: [], zoomControl: false });
+
+    const resizeObserver = new ResizeObserver(() => {
+      this._map.invalidateSize();
+    });
+
+    resizeObserver.observe(this._mapElement().nativeElement);
 
     // add layers
     Object.values(this._mapLayers).forEach((layerGroup) => {

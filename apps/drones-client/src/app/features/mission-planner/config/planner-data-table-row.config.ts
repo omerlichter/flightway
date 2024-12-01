@@ -61,6 +61,7 @@ export const PlannerDataTableRowConfig: Array<ColumnConfig<EnrichedMissionPoint>
     field: 'distance',
     header: 'Distance',
     editable: false,
+    units: 'm',
   },
   {
     field: 'azimuth',

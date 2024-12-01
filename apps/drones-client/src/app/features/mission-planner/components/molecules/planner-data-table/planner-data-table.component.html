@@ -10,9 +10,10 @@
   selectionMode="single"
   columnResizeMode="expand"
   scrollHeight="flex"
-  dataKey="id"
   editMode="row"
   (onRowReorder)="onUpdateTable()"
+  dataKey="id"
+  [rowTrackBy]="trackByFunction"
 >
   <ng-template pTemplate="header" let-columns>
     <tr>
@@ -63,7 +64,7 @@
           </ng-template>
         </p-cellEditor>
         } @else {
-        {{ rowData[col.field] }}
+        <span>{{ rowData[col.field] }}</span>
         }
       </td>
       }
@@ -107,8 +108,10 @@
           </ng-template>
         </p-cellEditor>
         } @else {
-        {{ rowData[col.field] }}
-        }
+        <span>{{ rowData[col.field] }}</span>
+        @if(col.units; as units) {
+        <span>{{ units }}</span>
+        }}
       </td>
       }
     </tr>

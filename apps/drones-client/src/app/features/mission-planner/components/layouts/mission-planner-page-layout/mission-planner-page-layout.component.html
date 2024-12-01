@@ -1,3 +1,7 @@
+<aside class="aside">
+  <ng-content select="[ng-content-toolbar]"></ng-content>
+</aside>
+
 <p-splitter class="splitter" layout="vertical" [panelSizes]="[70, 30]" [minSizes]="[40, 10]">
   <ng-template pTemplate>
     <ng-content select="[ng-content-main-section]"></ng-content>
@@ -6,7 +10,3 @@
     <ng-content select="[ng-content-bottom-section]"></ng-content>
   </ng-template>
 </p-splitter>
-
-<aside class="aside">
-  <ng-content select="[ng-content-toolbar]"></ng-content>
-</aside>

@@ -113,4 +113,8 @@ export class PlannerDataTableComponent {
       },
     });
   }
+
+  protected trackByFunction(index: number, item: unknown & { id: number }) {
+    return item.id; // O index
+  }
 }
