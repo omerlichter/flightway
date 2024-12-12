@@ -1,13 +1,11 @@
 <p-table
   class="data-table"
   styleClass="p-datatable-striped p-datatable-gridlines p-datatable-sm planner-data-table"
-  [value]="$missionPointsDataTable()"
+  [value]="$enrichedMissionPoints()"
   [columns]="rowConfig"
   [resizableColumns]="true"
   [reorderableColumns]="true"
   [scrollable]="true"
-  [(selection)]="$selectionDataTable"
-  selectionMode="single"
   columnResizeMode="expand"
   scrollHeight="flex"
   editMode="row"
@@ -30,7 +28,12 @@
 
   <ng-template pTemplate="body" let-rowData let-columns="columns" let-index="rowIndex" let-editing="editing">
     @if (rowData.special === 'HOME') {
-    <tr [pSelectableRow]="rowData" [pEditableRow]="rowData">
+    <tr
+      [ngClass]="{ 'p-highlight': $selectedMissionPoint()?.id === rowData.id }"
+      [pSelectableRow]="rowData"
+      [pEditableRow]="rowData"
+      (dblclick)="!editing && onSelectedMissionPoint(rowData)"
+    >
       <td pFrozenColumn></td>
       <td pFrozenColumn>
         <app-planner-data-table-actions-field
@@ -70,7 +73,13 @@
       }
     </tr>
     } @else {
-    <tr [pSelectableRow]="rowData" [pEditableRow]="rowData" [pReorderableRow]="index">
+    <tr
+      [ngClass]="{ 'p-highlight': $selectedMissionPoint()?.id === rowData.id }"
+      [pSelectableRow]="rowData"
+      [pEditableRow]="rowData"
+      [pReorderableRow]="index"
+      (dblclick)="!editing && onSelectedMissionPoint(rowData)"
+    >
       <td pFrozenColumn>
         <div class="additional-data-container">
           <span class="pi pi-bars" pReorderableRowHandle></span>

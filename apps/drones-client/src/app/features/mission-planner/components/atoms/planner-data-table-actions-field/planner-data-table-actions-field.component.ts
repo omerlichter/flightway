@@ -12,9 +12,11 @@ import { TableModule } from 'primeng/table';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PlannerDataTableActionsFieldComponent {
+  // Inputs
   public readonly $editing = input.required<boolean>({ alias: 'editing' });
   public readonly $hasDelete = input<boolean>(true, { alias: 'hasDelete' });
 
+  // Outputs
   public readonly edit = output<void>();
   public readonly delete = output<void>();
   public readonly save = output<void>();

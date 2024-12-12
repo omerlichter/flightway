@@ -13,7 +13,10 @@ import {
   rad2deg,
   MissionPoint,
 } from '@drones-app/shared';
-import { FSService } from 'apps/drones-client/src/app/core/services/fs.service';
+import { FSService } from '../../../../core/services/fs.service';
+import { MissionPointsStore } from '../../../../core/store/mission/mission-points.store';
+import { IdsMissionPoint } from '../../../../shared/types/ids-mission-point.type';
+import { IdsEnrichedMissionPoint } from '../../../../shared/types/ids-enriched-mission-point.type';
 
 @Component({
   selector: 'app-mission-planner-page',
@@ -29,24 +32,18 @@ import { FSService } from 'apps/drones-client/src/app/core/services/fs.service';
   styleUrl: './mission-planner-page.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MissionPlannerPageComponent implements OnInit {
+export class MissionPlannerPageComponent {
+  private _missionPointsStore = inject(MissionPointsStore);
+
   private _fsService = inject(FSService);
   private _$editableMapComponent = viewChild.required<EditableMap>(MapComponent);
 
-  protected $missionPoints = signal<Array<MissionPoint>>([
-    {
-      special: 'HOME',
-      category: 'TAKEOFF',
-      latitude: 32.0766323,
-      longitude: 35.0839419,
-      altitude: 350.7099914,
-    },
-  ]);
+  protected $missionPoints = this._missionPointsStore.entities;
 
-  protected $enrichedMissionPoints = computed<Array<EnrichedMissionPoint>>(() => {
+  protected $enrichedMissionPoints = computed<Array<IdsEnrichedMissionPoint>>(() => {
     let prevPoint = this.$missionPoints()[0];
 
-    return this.$missionPoints().map((point: MissionPoint) => {
+    return this.$missionPoints().map((point: IdsMissionPoint) => {
       const height = point.altitude - prevPoint.altitude;
       const distance = calcGeoDistance(point, prevPoint);
       const gradient = calcGradient(height, distance);
@@ -55,6 +52,7 @@ export class MissionPlannerPageComponent implements OnInit {
       prevPoint = point;
 
       return {
+        id: point.id,
         special: point.special,
         latitude: point.latitude,
         longitude: point.longitude,
@@ -68,24 +66,7 @@ export class MissionPlannerPageComponent implements OnInit {
     });
   });
 
-  protected $selectedMissionPointIndex = signal<number | null>(null);
-
-  public ngOnInit(): void {
-    this.onMarkerAdded({
-      special: 'REGULAR',
-      category: 'WAYPOINT',
-      latitude: 31.88473061,
-      longitude: 34.82609668,
-      altitude: 100,
-    });
-    this.onMarkerAdded({
-      special: 'REGULAR',
-      category: 'WAYPOINT',
-      latitude: 31.88968952,
-      longitude: 34.827940782,
-      altitude: 50,
-    });
-  }
+  protected $selectedMissionPoint = signal<IdsMissionPoint | null>(null);
 
   protected onDropMap(event: DragEvent) {
     event.preventDefault();
@@ -100,23 +81,21 @@ export class MissionPlannerPageComponent implements OnInit {
     }
   }
 
-  protected onDrawMarker(): void {
+  protected onDrawMarkerActivated(): void {
     this._$editableMapComponent().drawMarker();
   }
 
-  protected onMarkerAdded(mapPoint: MissionPoint): void {
-    this.$missionPoints.update((value: Array<MissionPoint>) => [...value, mapPoint]);
+  protected onMarkerAdded(mapPoint: IdsMissionPoint): void {
+    this.$selectedMissionPoint.set(null);
+    this._missionPointsStore.addMissionPoint(mapPoint);
   }
 
-  protected onUpdateDataTable(missionMapPoints: Array<MissionPoint>) {
-    this.$missionPoints.set([...missionMapPoints]);
+  protected onUpdateDataTable(missionMapPoints: Array<IdsMissionPoint>) {
+    this.$selectedMissionPoint.set(null);
+    this._missionPointsStore.setMissionPoints(missionMapPoints);
   }
 
-  protected onMakerClicked(index: number | null) {
-    this.$selectedMissionPointIndex.set(index);
-  }
-
-  protected onSelectMissionPointIndex(index: number | null) {
-    this.$selectedMissionPointIndex.set(index);
+  protected onSelectedMissionPoint(missionPoint: IdsMissionPoint | null) {
+    this.$selectedMissionPoint.set(missionPoint);
   }
 }

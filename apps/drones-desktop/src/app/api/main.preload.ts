@@ -5,6 +5,7 @@ const apiContextBridge: ApiContextBridge = {
   app: {
     getAppVersion: () => ipcRenderer.invoke('get-app-version'),
     getAppPlatform: () => ipcRenderer.invoke('get-app-platform'),
+    setAppDarkTheme: (darkTheme: boolean) => ipcRenderer.invoke('set-app-dark-theme', darkTheme),
   },
   map: {
     getMapTile: (baseUrl: string, z: number, x: number, y: number) =>

@@ -22,6 +22,8 @@ import {
   PlannerDataTableHomeRowConfig,
   PlannerDataTableRowConfig,
 } from '../../../config/planner-data-table-row.config';
+import { IdsEnrichedMissionPoint } from '../../../../../shared/types/ids-enriched-mission-point.type';
+import { IdsMissionPoint } from '../../../../../shared/types/ids-mission-point.type';
 
 @Component({
   selector: 'app-planner-data-table',
@@ -41,57 +43,25 @@ import {
 export class PlannerDataTableComponent {
   private confirmationService = inject(ConfirmationService);
 
-  public readonly $enrichedMissionPoints = input.required<Array<EnrichedMissionPoint>>({ alias: 'missionPoints' });
-  public readonly $selectedMissionPointIndex = input.required<number | null>({ alias: 'selectedMissionPointIndex' });
+  // Inputs
+  public readonly $enrichedMissionPoints = input.required<Array<IdsEnrichedMissionPoint>>({ alias: 'missionPoints' });
+  public readonly $selectedMissionPoint = input<IdsMissionPoint | null>(null, { alias: 'selectedMissionPoint' });
 
-  protected readonly $missionPointsDataTable = computed<Array<EnrichedMissionPoint & { id: number }>>(() =>
-    this.$enrichedMissionPoints().map((missionPoint, index) => {
-      return { ...missionPoint, id: index };
-    })
-  );
-
-  protected readonly $selectionDataTable = signal<(EnrichedMissionPoint & { id: number }) | null>(null);
+  // Outputs
+  public readonly updateTable = output<Array<IdsMissionPoint>>();
+  public readonly selectMissionPoint = output<IdsMissionPoint>();
 
   protected rowConfig = PlannerDataTableRowConfig;
   protected homeRowConfig = PlannerDataTableHomeRowConfig;
 
-  protected copiedDataTable: Array<EnrichedMissionPoint & { id: number }> = [];
-
-  public readonly updateTable = output<Array<MissionPoint>>();
-  public readonly selectMissionPointIndex = output<number | null>();
-
-  constructor() {
-    effect(
-      () => {
-        const selectionPoint = this.$selectionDataTable();
-        if (selectionPoint) {
-          this.selectMissionPointIndex.emit(selectionPoint.id);
-        } else {
-          this.selectMissionPointIndex.emit(null);
-        }
-      },
-      { allowSignalWrites: true }
-    );
-
-    effect(
-      () => {
-        const selectionPointIndex = this.$selectedMissionPointIndex();
-        if (selectionPointIndex !== null) {
-          this.$selectionDataTable.set(this.$missionPointsDataTable()[selectionPointIndex]);
-        } else {
-          this.$selectionDataTable.set(null);
-        }
-      },
-      { allowSignalWrites: true }
-    );
-  }
+  protected copiedDataTable: Array<IdsEnrichedMissionPoint> = [];
 
   protected onUpdateTable() {
-    this.updateTable.emit(this.$missionPointsDataTable());
+    this.updateTable.emit(this.$enrichedMissionPoints());
   }
 
   protected onEditInitMissionPoint(rowIndex: number) {
-    this.copiedDataTable[rowIndex] = cloneDeep(this.$missionPointsDataTable()[rowIndex]);
+    this.copiedDataTable[rowIndex] = cloneDeep(this.$enrichedMissionPoints()[rowIndex]);
   }
 
   protected onEditSaveMissionPoint() {
@@ -99,7 +69,7 @@ export class PlannerDataTableComponent {
   }
 
   protected onEditCancelMissionPoint(rowIndex: number) {
-    this.$missionPointsDataTable()[rowIndex] = this.copiedDataTable[rowIndex];
+    this.$enrichedMissionPoints()[rowIndex] = this.copiedDataTable[rowIndex];
     delete this.copiedDataTable[rowIndex];
   }
 
@@ -109,9 +79,13 @@ export class PlannerDataTableComponent {
       header: 'Delete',
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
-        this.updateTable.emit(this.$missionPointsDataTable().filter((_, index) => index != rowIndex));
+        this.updateTable.emit(this.$enrichedMissionPoints().filter((_, index) => index != rowIndex));
       },
     });
+  }
+
+  protected onSelectedMissionPoint(missionPoint: IdsMissionPoint) {
+    this.selectMissionPoint.emit(missionPoint);
   }
 
   protected trackByFunction(index: number, item: unknown & { id: number }) {

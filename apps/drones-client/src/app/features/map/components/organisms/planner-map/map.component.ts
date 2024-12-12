@@ -36,6 +36,7 @@ import { MapLayersComponent } from '../../molecules/map-layers/map-layers.compon
 import parse_georaster from 'georaster';
 import GeoRasterLayer, { GeoRaster } from 'georaster-layer-for-leaflet';
 import * as proj4 from 'proj4';
+import { IdsMissionPoint } from '../../../../../shared/types/ids-mission-point.type';
 
 @Component({
   selector: 'app-planner-map',
@@ -51,16 +52,17 @@ export class MapComponent implements EditableMap, AfterViewInit {
 
   private readonly _mapElement = viewChild.required<ElementRef<HTMLElement>>('map');
 
-  public readonly $missionPoints = input.required<Array<MissionPoint>>({ alias: 'missionPoints' });
-  public readonly $selectedMissionPointIndex = input.required<number | null>({ alias: 'selectedMissionPointIndex' });
-
+  // Inputs
+  public readonly $missionPoints = input.required<Array<IdsMissionPoint>>({ alias: 'missionPoints' });
   public readonly $mapLayers = input<Array<MapLayer>>(
     [{ name: 'open street map', type: 'tile', url: 'https://tile.openstreetmap.org', selected: true }],
     { alias: 'baseMapLayers' }
   );
+  public readonly $selectedMissionPoint = input<IdsMissionPoint | null>(null, { alias: 'selectedMissionPoint' });
 
-  public readonly markerAdded = output<MissionPoint>();
-  public readonly markerClicked = output<number | null>();
+  // Outputs
+  public readonly markerAdded = output<IdsMissionPoint>();
+  public readonly markerClicked = output<IdsMissionPoint | null>();
   public readonly drop = output<DragEvent>();
 
   private _map!: DrawMap;
@@ -77,7 +79,7 @@ export class MapComponent implements EditableMap, AfterViewInit {
       this._markersLayer.clearLayers();
       this._pathLayer.clearLayers();
 
-      this.$missionPoints().forEach((point: MissionPoint, index: number) => {
+      this.$missionPoints().forEach((point: IdsMissionPoint, index: number) => {
         if (point.special === 'HOME') {
           marker([point.latitude, point.longitude])
             .bindPopup(
@@ -85,7 +87,7 @@ export class MapComponent implements EditableMap, AfterViewInit {
                 `<b>H</b><br>latitude: ${point.latitude}<br>longitude: ${point.longitude}<br>altitude: ${point.altitude}`
             )
             .addTo(this._markersLayer)
-            .on('dblclick', () => this.markerClicked.emit(index));
+            .on('dblclick', () => this.onMarkerClicked(point));
         } else {
           marker([point.latitude, point.longitude])
             .bindPopup(
@@ -93,20 +95,19 @@ export class MapComponent implements EditableMap, AfterViewInit {
                 `<b>${index}</b><br>latitude: ${point.latitude}<br>longitude: ${point.longitude}<br>altitude: ${point.altitude}`
             )
             .addTo(this._markersLayer)
-            .on('dblclick', () => this.markerClicked.emit(index));
+            .on('dblclick', () => this.onMarkerClicked(point));
         }
       });
       polyline(
-        this.$missionPoints().map((point: MissionPoint) => [point.latitude, point.longitude]) as LatLngExpression[],
+        this.$missionPoints().map((point: IdsMissionPoint) => [point.latitude, point.longitude]) as LatLngExpression[],
         { color: 'red', dashArray: [1, 10] }
       ).addTo(this._pathLayer);
     });
 
     effect(() => {
-      const selectedIndex = this.$selectedMissionPointIndex();
-      if (selectedIndex !== null) {
-        const point = this.$missionPoints()[selectedIndex];
-        this._map.flyTo({ alt: point.altitude, lng: point.longitude, lat: point.latitude });
+      const selectedMissionPoint = this.$selectedMissionPoint();
+      if (selectedMissionPoint) {
+        this._map.flyTo({ lat: selectedMissionPoint.latitude, lng: selectedMissionPoint.longitude });
       }
     });
 
@@ -197,6 +198,7 @@ export class MapComponent implements EditableMap, AfterViewInit {
         const marker = layer as Marker;
         const { lat, lng } = marker.getLatLng();
         this.markerAdded.emit({
+          id: crypto.randomUUID(),
           special: 'REGULAR',
           category: 'WAYPOINT',
           latitude: lat,
@@ -214,5 +216,9 @@ export class MapComponent implements EditableMap, AfterViewInit {
 
   protected onDrop(event: DragEvent) {
     this.drop.emit(event);
+  }
+
+  protected onMarkerClicked(missionPoint: IdsMissionPoint | null) {
+    this.markerClicked.emit(missionPoint);
   }
 }

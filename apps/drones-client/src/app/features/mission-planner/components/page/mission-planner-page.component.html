@@ -2,17 +2,17 @@
   <app-planner-map
     ng-content-main-section
     [missionPoints]="$enrichedMissionPoints()"
-    [selectedMissionPointIndex]="$selectedMissionPointIndex()"
+    [selectedMissionPoint]="$selectedMissionPoint()"
     (markerAdded)="onMarkerAdded($event)"
-    (markerClicked)="onMakerClicked($event)"
+    (markerClicked)="onSelectedMissionPoint($event)"
     (drop)="onDropMap($event)"
   ></app-planner-map>
   <app-planner-data-table
     ng-content-bottom-section
     [missionPoints]="$enrichedMissionPoints()"
-    [selectedMissionPointIndex]="$selectedMissionPointIndex()"
+    [selectedMissionPoint]="$selectedMissionPoint()"
     (updateTable)="onUpdateDataTable($event)"
-    (selectMissionPointIndex)="onSelectMissionPointIndex($event)"
+    (selectMissionPoint)="onSelectedMissionPoint($event)"
   ></app-planner-data-table>
-  <app-planner-toolbar ng-content-toolbar (drawMarker)="onDrawMarker()"></app-planner-toolbar>
+  <app-planner-toolbar ng-content-toolbar (drawMarker)="onDrawMarkerActivated()"></app-planner-toolbar>
 </app-mission-planner-page-layout>
