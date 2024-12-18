@@ -4,9 +4,12 @@ import {
   Component,
   effect,
   ElementRef,
+  HostListener,
   inject,
   input,
+  model,
   output,
+  signal,
   viewChild,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -26,22 +29,23 @@ import {
   polyline,
 } from 'leaflet';
 import 'leaflet-draw';
-import { MissionPoint } from '@drones-app/shared';
+import { IdsMissionPoint } from '../../../../../shared/types/ids-mission-point.type';
 import { MapTileService } from '../../../../../core/services/map-tile.service';
 import { PathTileLayer } from '../../../classes/path-tile-layer.type';
 import { EditableMap } from '../../../classes/editable-map.type';
-import { FSService } from '../../../../../core/services/fs.service';
 import { MapLayer, MapLayerType } from '../../../../../features/map/types/map-layer.type';
 import { MapLayersComponent } from '../../molecules/map-layers/map-layers.component';
-import parse_georaster from 'georaster';
-import GeoRasterLayer, { GeoRaster } from 'georaster-layer-for-leaflet';
-import * as proj4 from 'proj4';
-import { IdsMissionPoint } from '../../../../../shared/types/ids-mission-point.type';
+import { MapPageLayoutComponent } from '../../layouts/map-page-layout/map-page-layout.component';
+import { DialogModule } from 'primeng/dialog';
+import { FSService } from 'apps/drones-client/src/app/core/services/fs.service';
+// import parse_georaster from 'georaster';
+// import GeoRasterLayer, { GeoRaster } from 'georaster-layer-for-leaflet';
+// import * as proj4 from 'proj4';
 
 @Component({
   selector: 'app-planner-map',
   standalone: true,
-  imports: [CommonModule, MapLayersComponent],
+  imports: [CommonModule, DialogModule, MapPageLayoutComponent, MapLayersComponent],
   templateUrl: './map.component.html',
   styleUrl: './map.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -55,7 +59,7 @@ export class MapComponent implements EditableMap, AfterViewInit {
   // Inputs
   public readonly $missionPoints = input.required<Array<IdsMissionPoint>>({ alias: 'missionPoints' });
   public readonly $mapLayers = input<Array<MapLayer>>(
-    [{ name: 'open street map', type: 'tile', url: 'https://tile.openstreetmap.org', selected: true }],
+    [{ name: 'open street map', type: 'tile', url: 'https://tile.openstreetmap.org', activated: true }],
     { alias: 'baseMapLayers' }
   );
   public readonly $selectedMissionPoint = input<IdsMissionPoint | null>(null, { alias: 'selectedMissionPoint' });
@@ -64,6 +68,8 @@ export class MapComponent implements EditableMap, AfterViewInit {
   public readonly markerAdded = output<IdsMissionPoint>();
   public readonly markerClicked = output<IdsMissionPoint | null>();
   public readonly drop = output<DragEvent>();
+
+  protected readonly $isNewLayerDialogOpen = signal<boolean>(false);
 
   private _map!: DrawMap;
   private _markersLayer: FeatureGroup = featureGroup();
@@ -214,8 +220,20 @@ export class MapComponent implements EditableMap, AfterViewInit {
     markerDrawer.enable();
   }
 
-  protected onDrop(event: DragEvent) {
-    this.drop.emit(event);
+  @HostListener('drop', ['$event'])
+  protected onDropMap(event: DragEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+
+    const files = event.dataTransfer?.files;
+
+    if (files) {
+      for (const file of files) {
+        console.log(this._fsService.getFilePath(file));
+      }
+    }
+
+    this.$isNewLayerDialogOpen.set(true);
   }
 
   protected onMarkerClicked(missionPoint: IdsMissionPoint | null) {

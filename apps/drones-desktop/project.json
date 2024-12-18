@@ -50,7 +50,10 @@
         "name": "drones-desktop",
         "frontendProject": "drones-client",
         "sourcePath": "dist/apps",
-        "outputPath": "dist/executables"
+        "outputPath": "dist/executables",
+        "win": {
+          "icon": "apps\\drones-client\\src\\favicon.ico"
+        }
       }
     },
     "lint": {

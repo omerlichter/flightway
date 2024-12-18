@@ -13,4 +13,12 @@
     z-index: 1000;
     width: 300px;
   }
+
+  [ng-content-map] {
+    width: 100%;
+  }
+
+  [ng-content-layers] {
+    width: 100%;
+  }
 }

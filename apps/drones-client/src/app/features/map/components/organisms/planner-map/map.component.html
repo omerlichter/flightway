@@ -1,2 +1,7 @@
-<div #map id="map" (drop)="onDrop($event)"></div>
-<app-map-layers class="layers" [mapLayers]="$mapLayers()"></app-map-layers>
+<app-map-page-layout>
+  <div ng-content-map #map id="map"></div>
+  <app-map-layers ng-content-layers [mapLayers]="$mapLayers()"></app-map-layers>
+</app-map-page-layout>
+
+<p-dialog [draggable]="false" [resizable]="false" [modal]="true" [(visible)]="$isNewLayerDialogOpen" header="New Layer">
+</p-dialog>

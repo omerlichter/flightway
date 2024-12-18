@@ -1,18 +1,11 @@
-import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal, viewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MissionPlannerPageLayoutComponent } from '../layouts/mission-planner-page-layout/mission-planner-page-layout.component';
 import { MapComponent } from '../../../map/components/organisms/planner-map/map.component';
 import { EditableMap } from '../../../map/classes/editable-map.type';
 import { PlannerToolbarComponent } from '../molecules/planner-toolbar/planner-toolbar.component';
 import { PlannerDataTableComponent } from '../molecules/planner-data-table/planner-data-table.component';
-import {
-  calcBearing,
-  calcGeoDistance,
-  calcGradient,
-  EnrichedMissionPoint,
-  rad2deg,
-  MissionPoint,
-} from '@drones-app/shared';
+import { calcBearing, calcGeoDistance, calcGradient, rad2deg } from '@drones-app/shared';
 import { FSService } from '../../../../core/services/fs.service';
 import { MissionPointsStore } from '../../../../core/store/mission/mission-points.store';
 import { IdsMissionPoint } from '../../../../shared/types/ids-mission-point.type';
@@ -33,14 +26,13 @@ import { IdsEnrichedMissionPoint } from '../../../../shared/types/ids-enriched-m
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MissionPlannerPageComponent {
-  private _missionPointsStore = inject(MissionPointsStore);
+  private readonly _missionPointsStore = inject(MissionPointsStore);
 
-  private _fsService = inject(FSService);
-  private _$editableMapComponent = viewChild.required<EditableMap>(MapComponent);
+  private readonly _$editableMapComponent = viewChild.required<EditableMap>(MapComponent);
 
-  protected $missionPoints = this._missionPointsStore.entities;
+  protected readonly $missionPoints = this._missionPointsStore.entities;
 
-  protected $enrichedMissionPoints = computed<Array<IdsEnrichedMissionPoint>>(() => {
+  protected readonly $enrichedMissionPoints = computed<Array<IdsEnrichedMissionPoint>>(() => {
     let prevPoint = this.$missionPoints()[0];
 
     return this.$missionPoints().map((point: IdsMissionPoint) => {
@@ -66,20 +58,7 @@ export class MissionPlannerPageComponent {
     });
   });
 
-  protected $selectedMissionPoint = signal<IdsMissionPoint | null>(null);
-
-  protected onDropMap(event: DragEvent) {
-    event.preventDefault();
-    event.stopPropagation();
-
-    const files = event.dataTransfer?.files;
-
-    if (files) {
-      for (const file of files) {
-        console.log(this._fsService.getFilePath(file));
-      }
-    }
-  }
+  protected readonly $selectedMissionPoint = signal<IdsMissionPoint | null>(null);
 
   protected onDrawMarkerActivated(): void {
     this._$editableMapComponent().drawMarker();

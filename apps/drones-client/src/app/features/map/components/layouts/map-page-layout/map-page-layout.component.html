@@ -1,0 +1,8 @@
+<p-splitter class="splitter" layout="horizontal" [panelSizes]="[15, 85]" [minSizes]="[10, 60]">
+  <ng-template pTemplate>
+    <ng-content select="[ng-content-layers]"></ng-content>
+  </ng-template>
+  <ng-template pTemplate>
+    <ng-content select="[ng-content-map]"></ng-content>
+  </ng-template>
+</p-splitter>

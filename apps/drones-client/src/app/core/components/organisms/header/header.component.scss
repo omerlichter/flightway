@@ -7,13 +7,23 @@
   justify-content: space-between;
 
   background-color: var(--surface-50);
-  padding: var(--spacing-medium-100);
+  padding-block: var(--spacing-medium-100);
+  padding-inline: var(--spacing-medium-200);
 
   .left-action-panel {
     display: flex;
     flex-direction: row;
     align-items: center;
     gap: var(--spacing-medium-200);
+
+    .app-logo {
+      display: flex;
+      align-items: center;
+
+      img {
+        height: 30px;
+      }
+    }
 
     .app-metadata {
       font-size: var(--fs-small-200);

@@ -1,0 +1,9 @@
+:host {
+  height: 100%;
+
+  .splitter {
+    height: 100%;
+    display: grid;
+    overflow: auto;
+  }
+}

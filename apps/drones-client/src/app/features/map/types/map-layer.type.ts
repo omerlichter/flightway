@@ -1,7 +1,7 @@
 type BaseMapLayer = {
   name: string;
   url: string;
-  selected: boolean;
+  activated: boolean;
 };
 
 export type TileMapLayer = BaseMapLayer & {
