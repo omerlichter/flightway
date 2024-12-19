@@ -66,6 +66,12 @@ export default class App {
     App.mainWindow = new BrowserWindow({
       width: width,
       height: height,
+      titleBarStyle: 'hidden',
+      titleBarOverlay: {
+        color: 'hsl(215, 28%, 10%)',
+        symbolColor: '#ffffff',
+        height: 40,
+      },
       show: false,
       webPreferences: {
         nodeIntegration: true,
