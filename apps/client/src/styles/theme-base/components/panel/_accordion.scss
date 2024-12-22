@@ -1,0 +1,111 @@
+.p-accordion {
+  .p-accordion-header {
+    .p-accordion-header-link {
+      padding: $accordionHeaderPadding;
+      color: $accordionHeaderTextColor;
+      font-weight: $accordionHeaderFontWeight;
+      border-radius: $borderRadius;
+      transition: $listItemTransition;
+
+      .p-accordion-toggle-icon {
+        margin-right: $inlineSpacing;
+      }
+    }
+
+    &:not(.p-disabled) {
+      .p-accordion-header-link {
+        &:focus-visible {
+          @include focused-inset();
+        }
+      }
+    }
+
+    &:not(.p-highlight):not(.p-disabled):hover {
+      .p-accordion-header-link {
+        color: $accordionHeaderTextHoverColor;
+      }
+    }
+
+    &:not(.p-disabled).p-highlight {
+      .p-accordion-header-link {
+        color: $accordionHeaderTextActiveColor;
+        border-bottom-right-radius: 0;
+        border-bottom-left-radius: 0;
+      }
+
+      &:hover {
+        .p-accordion-header-link {
+          background: $accordionHeaderActiveHoverBg;
+          color: $accordionHeaderTextActiveHoverColor;
+        }
+      }
+    }
+  }
+
+  .p-accordion-content {
+    padding: $accordionContentPadding;
+    padding-left: var(--spacing-large-100);
+    color: $accordionContentTextColor;
+    border-top: 0;
+    border-top-right-radius: 0;
+    border-top-left-radius: 0;
+    border-bottom-right-radius: $borderRadius;
+    border-bottom-left-radius: $borderRadius;
+  }
+
+  p-accordiontab {
+    .p-accordion-tab {
+      margin-bottom: $accordionSpacing;
+    }
+
+    @if $accordionSpacing == 0 {
+      .p-accordion-header {
+        .p-accordion-header-link {
+          border-radius: 0;
+        }
+      }
+
+      .p-accordion-content {
+        border-radius: 0;
+      }
+
+      &:not(:first-child) {
+        .p-accordion-header {
+          .p-accordion-header-link {
+            border-top: 0 none;
+          }
+
+          &:not(.p-highlight):not(.p-disabled):hover,
+          &:not(.p-disabled).p-highlight:hover {
+            .p-accordion-header-link {
+              border-top: 0 none;
+            }
+          }
+        }
+      }
+
+      &:first-child {
+        .p-accordion-header {
+          .p-accordion-header-link {
+            border-top-right-radius: $borderRadius;
+            border-top-left-radius: $borderRadius;
+          }
+        }
+      }
+
+      &:last-child {
+        .p-accordion-header:not(.p-highlight) {
+          .p-accordion-header-link {
+            border-bottom-right-radius: $borderRadius;
+            border-bottom-left-radius: $borderRadius;
+          }
+        }
+
+        .p-accordion-content {
+          border-bottom-right-radius: $borderRadius;
+          border-bottom-left-radius: $borderRadius;
+        }
+      }
+    }
+  }
+}

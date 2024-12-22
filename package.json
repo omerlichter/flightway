@@ -1,16 +1,16 @@
 {
-  "name": "drones",
-  "description": "drones app",
+  "name": "flightway",
+  "description": "flightway app",
   "version": "0.0.0",
   "license": "MIT",
   "author": {
-    "name": "drones company"
+    "name": "flightway company"
   },
   "scripts": {
     "start": "nx run-many -t serve",
     "postinstall": "electron-builder install-app-deps && electron-builder install-app-deps",
     "build": "nx run-many -t build",
-    "make": "npm run build && nx run drones-desktop:make"
+    "make": "npm run build && nx run desktop:make"
   },
   "private": true,
   "dependencies": {

@@ -61,7 +61,7 @@
       "changeDetection": "OnPush"
     }
   },
-  "defaultProject": "drones-desktop",
+  "defaultProject": "desktop",
   "plugins": [
     {
       "plugin": "@nx/eslint/plugin",

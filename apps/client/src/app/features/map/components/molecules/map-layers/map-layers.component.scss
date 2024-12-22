@@ -1,0 +1,11 @@
+:host {
+  padding-inline: var(--spacing-small-200);
+  padding-block: var(--spacing-small-300);
+
+  .layer {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: var(--spacing-small-300);
+  }
+}

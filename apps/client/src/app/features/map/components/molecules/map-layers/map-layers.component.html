@@ -1,0 +1,12 @@
+<p-accordion [multiple]="true" [activeIndex]="[0, 1, 2]">
+  <p-accordionTab header="Tile Layers">
+    @for (layer of $tileLayers(); track $index) {
+    <div class="layer">
+      <span class="pi pi-map"></span>
+      <span>{{ layer.name }}</span>
+    </div>
+    }
+  </p-accordionTab>
+  <p-accordionTab header="Height Layers"> </p-accordionTab>
+  <p-accordionTab header="Overlay Layers"> </p-accordionTab>
+</p-accordion>

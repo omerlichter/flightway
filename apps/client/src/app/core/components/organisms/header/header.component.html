@@ -1,0 +1,26 @@
+<section class="left-action-panel app-drag">
+  <div class="app-logo">
+    <img src="assets/project/logo/flightway-logo.svg" />
+  </div>
+  <div class="app-metadata">
+    <span>app version</span>
+    <span> - </span>
+    <span>{{ $appPlatform() }}</span>
+    <span> : </span>
+    <span>{{ $appVersion() }}</span>
+  </div>
+</section>
+
+<section class="middle-panel app-drag"></section>
+
+<section class="right-action-panel">
+  <p-toggleButton
+    class="p-button-sm"
+    styleClass="ghost"
+    onIcon="pi pi-sun"
+    offIcon="pi pi-moon"
+    [(ngModel)]="$isLightMode"
+  ></p-toggleButton>
+</section>
+
+<section class="app-control-panel"></section>
