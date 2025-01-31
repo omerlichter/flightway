@@ -1,0 +1,31 @@
+:host {
+  form {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    .form-group {
+      display: grid;
+      grid-template-columns: 100px 1fr;
+      grid-auto-rows: max-content;
+
+      row-gap: var(--spacing-medium-100);
+      column-gap: var(--spacing-medium-200);
+
+      .form-item {
+        display: grid;
+        grid-column: 1 / 3;
+        grid-template-columns: subgrid;
+
+        align-items: center;
+      }
+    }
+
+    .form-action {
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-end;
+    }
+  }
+}

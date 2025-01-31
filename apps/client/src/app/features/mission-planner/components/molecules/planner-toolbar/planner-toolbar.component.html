@@ -13,6 +13,13 @@
   [outlined]="true"
 ></p-button>
 <p-divider />
-<p-button icon="pi pi-bullseye" [outlined]="true"></p-button>
-<p-button icon="pi pi-map-marker" [outlined]="true" (click)="onDrawMarker()"></p-button>
-<p-button icon="pi pi-map" [outlined]="true"></p-button>
+<p-button
+  pTooltip="Add Mission Point"
+  showDelay="500"
+  tooltipPosition="left"
+  icon="pi pi-map-marker"
+  [outlined]="true"
+  (click)="onDrawMarker()"
+></p-button>
+<!-- <p-button icon="pi pi-bullseye" [outlined]="true"></p-button> -->
+<!-- <p-button icon="pi pi-map" [outlined]="true"></p-button> -->

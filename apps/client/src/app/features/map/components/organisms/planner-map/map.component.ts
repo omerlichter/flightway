@@ -7,7 +7,6 @@ import {
   HostListener,
   inject,
   input,
-  model,
   output,
   signal,
   viewChild,
@@ -16,6 +15,7 @@ import { CommonModule } from '@angular/common';
 import {
   Draw,
   DrawEvents,
+  drawLocal,
   DrawMap,
   featureGroup,
   FeatureGroup,
@@ -37,7 +37,8 @@ import { MapLayer, MapLayerType } from '../../../../../features/map/types/map-la
 import { MapLayersComponent } from '../../molecules/map-layers/map-layers.component';
 import { MapPageLayoutComponent } from '../../layouts/map-page-layout/map-page-layout.component';
 import { FSService } from '../../../../../core/services/fs.service';
-import { DialogModule } from 'primeng/dialog';
+import { DialogService, DynamicDialogRef, DynamicDialogModule } from 'primeng/dynamicdialog';
+import { LayerDialogComponent } from '../../molecules/layer-dialog/layer-dialog.component';
 // import parse_georaster from 'georaster';
 // import GeoRasterLayer, { GeoRaster } from 'georaster-layer-for-leaflet';
 // import * as proj4 from 'proj4';
@@ -45,7 +46,8 @@ import { DialogModule } from 'primeng/dialog';
 @Component({
   selector: 'app-planner-map',
   standalone: true,
-  imports: [CommonModule, DialogModule, MapPageLayoutComponent, MapLayersComponent],
+  imports: [CommonModule, MapPageLayoutComponent, MapLayersComponent, LayerDialogComponent],
+  providers: [DialogService],
   templateUrl: './map.component.html',
   styleUrl: './map.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -53,6 +55,7 @@ import { DialogModule } from 'primeng/dialog';
 export class MapComponent implements EditableMap, AfterViewInit {
   private readonly _mapTileService = inject(MapTileService);
   private readonly _fsService = inject(FSService);
+  private readonly _dialogService = inject(DialogService);
 
   private readonly _mapElement = viewChild.required<ElementRef<HTMLElement>>('map');
 
@@ -68,8 +71,6 @@ export class MapComponent implements EditableMap, AfterViewInit {
   public readonly markerAdded = output<IdsMissionPoint>();
   public readonly markerClicked = output<IdsMissionPoint | null>();
   public readonly drop = output<DragEvent>();
-
-  protected readonly $isNewLayerDialogOpen = signal<boolean>(false);
 
   private _map!: DrawMap;
   private _markersLayer: FeatureGroup = featureGroup();
@@ -213,6 +214,11 @@ export class MapComponent implements EditableMap, AfterViewInit {
         });
       }
     });
+
+    // change draw tooltip
+    drawLocal.draw.handlers.marker.tooltip = {
+      start: 'place mission point',
+    };
   }
 
   public drawMarker(): void {
@@ -229,11 +235,21 @@ export class MapComponent implements EditableMap, AfterViewInit {
 
     if (files) {
       for (const file of files) {
-        console.log(this._fsService.getFilePath(file));
+        const filePath = this._fsService.getFilePath(file);
+
+        this._dialogService.open(LayerDialogComponent, {
+          draggable: false,
+          resizable: false,
+          modal: true,
+          header: 'New Layer',
+          width: '50%',
+          height: '50%',
+          data: {
+            initPath: filePath,
+          },
+        });
       }
     }
-
-    this.$isNewLayerDialogOpen.set(true);
   }
 
   protected onMarkerClicked(missionPoint: IdsMissionPoint | null) {

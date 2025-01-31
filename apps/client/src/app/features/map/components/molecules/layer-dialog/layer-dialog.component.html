@@ -1,0 +1,28 @@
+<form #layerForm="ngForm" (ngSubmit)="onSubmit()">
+  <div class="form-group">
+    <div class="form-item">
+      <label for="path">File Path</label>
+      <p-inputGroup>
+        <p-inputGroupAddon> HTTP </p-inputGroupAddon>
+        <input type="text" pInputText name="path" #path="ngModel" required [(ngModel)]="$path" />
+      </p-inputGroup>
+    </div>
+    <div class="form-item">
+      <label for="path">Layer Name</label>
+      <input type="text" pInputText name="name" #name="ngModel" required [(ngModel)]="$layerName" />
+    </div>
+    <div class="form-item">
+      <label for="type">Layer Type</label>
+      <p-dropdown
+        [options]="layerTypeOptions"
+        name="type"
+        #type="ngModel"
+        required
+        [(ngModel)]="$layerType"
+      ></p-dropdown>
+    </div>
+  </div>
+  <div class="form-action">
+    <p-button type="submit" label="Submit" [disabled]="!layerForm.form.valid" />
+  </div>
+</form>
